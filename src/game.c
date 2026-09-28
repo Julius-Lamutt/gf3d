@@ -19,6 +19,7 @@
 #include "gf3d_vgraphics.h"
 #include "gf3d_pipeline.h"
 #include "gf3d_swapchain.h"
+#include "gf3d_mesh.h"
 
 extern int __DEBUG;
 
@@ -48,6 +49,7 @@ int main(int argc,char *argv[])
     gfc_config_def_init();
     gfc_action_init(1024);
     //gf3d init
+    gf3d_mesh_init(2000);  
     gf3d_vgraphics_init("config/setup.cfg");
     gf2d_font_init("config/font.cfg");
     gf2d_actor_init(1000);
@@ -63,7 +65,7 @@ int main(int argc,char *argv[])
         gfc_input_update();
         gf2d_mouse_update();
         gf2d_font_update();
-        //camera updaes
+        //camera updates
         gf3d_vgraphics_render_start();
                 //2D draws
                 gf2d_sprite_draw_image(bg,gfc_vector2d(0,0));

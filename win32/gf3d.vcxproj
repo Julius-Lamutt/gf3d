@@ -64,6 +64,7 @@
     <ClInclude Include="..\include\gf3d_validation.h" />
     <ClInclude Include="..\include\gf3d_vgraphics.h" />
     <ClInclude Include="..\include\gf3d_vqueues.h" />
+    <ClInclude Include="..\include\model.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\gfc\simple_json\src\simple_json.c" />
@@ -107,6 +108,7 @@
     <ClCompile Include="..\src\gf3d_device.c" />
     <ClCompile Include="..\src\gf3d_extensions.c" />
     <ClCompile Include="..\src\gf3d_gltf_parse.c" />
+    <ClCompile Include="..\src\gf3d_mesh.c" />
     <ClCompile Include="..\src\gf3d_obj_load.c" />
     <ClCompile Include="..\src\gf3d_pipeline.c" />
     <ClCompile Include="..\src\gf3d_shaders.c" />

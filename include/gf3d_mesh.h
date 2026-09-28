@@ -101,19 +101,18 @@ void gf3d_mesh_move_vertices(Mesh *in, GFC_Vector3D offset,GFC_Vector3D rotation
  */
 MeshPrimitive *gf3d_mesh_primitive_new();
 
-
 /**
  * @brief get the input attribute descriptions for mesh based rendering
  * @param count (optional, output) the number of attributes
  * @return a pointer to a vertex input attribute description array
  */
-VkVertexInputAttributeDescription * gf3d_mesh_get_attribute_descriptions(Uint32 *count);
+VkVertexInputAttributeDescription *gf3d_mesh_get_attribute_descriptions(Uint32 *count);
 
 /**
  * @brief get the binding description for mesh based rendering
  * @return vertex input binding descriptions compatible with mesh data
  */
-VkVertexInputBindingDescription * gf3d_mesh_get_bind_description();
+VkVertexInputBindingDescription *gf3d_mesh_get_bind_description();
 
 /**
  * @brief free a mesh that has been loaded from memory
@@ -152,12 +151,12 @@ void gf3d_mesh_queue_render(Mesh *mesh,Pipeline *pipe,void *uboData,Texture *tex
  * @param mesh the mesh to render
  * @param com the command pool to use to handle the request we are rendering with
  */
-void gf3d_mesh_render(Mesh *mesh,VkCommandBuffer commandBuffer, VkDescriptorSet * descriptorSet);
+void gf3d_mesh_render(Mesh *mesh,VkCommandBuffer commandBuffer, VkDescriptorSet *descriptorSet);
 
 /**
  * @brief render a mesh through a given pipeline
  */
-void gf3d_mesh_render_generic(Mesh *mesh,Pipeline *pipe,VkDescriptorSet * descriptorSet);
+void gf3d_mesh_render_generic(Mesh *mesh,Pipeline *pipe,VkDescriptorSet *descriptorSet);
 
 /**
  * @brief create a mesh's internal buffers based on vertices
@@ -177,9 +176,13 @@ Pipeline *gf3d_mesh_get_pipeline();
  * @param modelMat the model Matrix
  * @param colorMod the color for the UBO
  */
-MeshUBO gf3d_mesh_get_ubo(
-    GFC_Matrix4 modelMat,
-    GFC_Color colorMod);
+MeshUBO gf3d_mesh_get_ubo(GFC_Matrix4 modelMat, GFC_Color colorMod);
 
+/**
+* @brief get mesh data from a file
+* @param filename: the filename to get the mesh data from
+* @return a mesh
+*/
+Mesh *gf3d_mesh_get_by_filename(const char* filename);
 
 #endif
