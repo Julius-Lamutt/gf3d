@@ -118,6 +118,7 @@
     <ClCompile Include="..\src\gf3d_validation.c" />
     <ClCompile Include="..\src\gf3d_vgraphics.c" />
     <ClCompile Include="..\src\gf3d_vqueues.c" />
+    <ClCompile Include="..\src\model.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F2888FF8-08AA-47C4-B321-B8090877719F}</ProjectGuid>

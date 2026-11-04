@@ -200,7 +200,7 @@ void gf3d_pipeline_queue_render(
     memcpy(drawCall->uboData,uboData,pipe->uboDataSize);
 }
 
-void gf3_pipeline_update_ubos(Pipeline *pipe)
+void gf3d_pipeline_update_ubos(Pipeline *pipe)
 {
     int frame;
     void *data;
@@ -767,7 +767,7 @@ void gf3d_pipeline_submit_all_pipe_commands()
     {
         if (!gf3d_pipeline.pipelineList[i].inUse)continue;
         //Update UBOS
-        gf3_pipeline_update_ubos(&gf3d_pipeline.pipelineList[i]);
+        gf3d_pipeline_update_ubos(&gf3d_pipeline.pipelineList[i]);
         //Update Descriptor sets
         gf3d_pipeline_update_descriptor_sets(&gf3d_pipeline.pipelineList[i]);
         //Set commands

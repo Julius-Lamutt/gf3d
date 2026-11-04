@@ -156,7 +156,7 @@ ObjData *gf3d_obj_load_from_file(const char *filename)
     if (!obj)return NULL;
     
     gf3d_obj_get_counts_from_file(obj, mem,fileSize);
-    
+
     obj->vertices = (GFC_Vector3D *)gfc_allocate_array(sizeof(GFC_Vector3D),obj->vertex_count);
     obj->normals = (GFC_Vector3D *)gfc_allocate_array(sizeof(GFC_Vector3D),obj->normal_count);
     obj->texels = (GFC_Vector2D *)gfc_allocate_array(sizeof(GFC_Vector2D),obj->texel_count);

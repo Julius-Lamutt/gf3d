@@ -9,24 +9,65 @@ typedef struct
 	GFC_Matrix4     view;
 	GFC_Matrix4     proj;
 	GFC_Vector4D    color;
-} MeshUBO;
+} ModelUBO;
 
 typedef struct
 {
 	int					_refCount;
-	Texture				*texture;			/*<texture memory pointer*/
-	Mesh				*mesh;				/*<GPU handles for mesh data*/
-	VkDescriptorSet		*descriptorSet;		/*<descriptor sets used for this model to render*/
+	GFC_TextLine		filename;			/**<name of the model*/
+	Texture				*texture;			/**<texture memory pointer*/
+	Mesh				*mesh;				/**<GPU handles for mesh data*/
 } Model;
 
-/*
+/**
 * @brief initialize model manager
+* @param modelCount the maximum number of models that can be supported
 */
 void model_init_system(Uint32 modelCount);
 
-/*
-* @brief initialize model manager
+/**
+* @brief create a new model
+* @return a new model
 */
-void model_close();
+Model *model_new();
+
+/**
+* @brief free a model
+* @param model the model to free
+*/
+void model_free(Model *model);
+
+/**
+* @brief load a model from a json file
+* @param filename name of the model file to load
+*/
+Model *model_load(const char *filename);
+
+/**
+* @brief find an existing model by filename
+* @param filename name of the model to find
+*/
+Model *model_get_by_filename(const char *filename);
+
+/*
+* @brief get the model pipeline
+* @return NULL if pipeline does not exist, the model pipeline otherwise
+*/
+Pipeline *model_get_pipeline();
+
+/**
+* @brief given a model matrix and basic color, build the modelUBO needed to render a model
+* @param modelMat the model Matrix
+* @param colorMod the color for the UBO
+*/
+ModelUBO model_get_ubo(GFC_Matrix4 modelMat, GFC_Color colorMod);
+
+/*
+* @brief queue a render for a model
+* @param model the model to render
+* @param mat the model matrix
+* @param colorMod the color mod for the render
+*/
+void model_queue_render(Model *model, GFC_Matrix4 mat, GFC_Color colorMod);
 
 #endif
