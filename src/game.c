@@ -22,6 +22,8 @@
 #include "gf3d_mesh.h"
 
 #include "model.h"
+#include "entity.h"
+#include "player.h"
 
 extern int __DEBUG;
 
@@ -37,41 +39,44 @@ void exitGame()
     _done = 1;
 }
 
-
 int main(int argc,char *argv[])
 {
-    //local variables
+    // local variables
     Sprite *bg;
-    Model *model;
-    GFC_Matrix4 mat, *view;
+    GFC_Matrix4 *view;
+    Entity *player;
 
-    //initializtion    
+    // initializtion    
     parse_arguments(argc,argv);
     init_logger("gf3d.log",0);
     slog("gf3d begin");
 
-    //gfc init
+    // gfc init
     gfc_input_init("config/input.cfg");
     gfc_config_def_init();
     gfc_action_init(1024);
     gfc_audio_init(200, 1, 0);
 
-    //gf3d init
+    // gf3d init
     gf3d_mesh_init(2000);
     gf3d_vgraphics_init("config/setup.cfg");
     gf2d_font_init("config/font.cfg");
     gf2d_actor_init(1000);
+
+    // entity init
+    entity_system_init(1024);
     
-    //game init
+    // game init
     srand(SDL_GetTicks());
     slog_sync();
     bg = gf2d_sprite_load_image("images/bg_flat.png");
     gf2d_mouse_load("actors/mouse.actor");
 
-    //agumon render
-    model = model_load("models/dino.model");
-    gfc_matrix4_identity(mat);
-    
+    // player entity
+    player = player_spawn(gfc_vector3d(0, 0, 0));
+    player->model = model_load("models/dino.model");
+
+    // setup the camera view
     view = gf3d_vgraphics_get_view_matrix();
     gfc_matrix4_view(
         *view,
@@ -82,14 +87,20 @@ int main(int argc,char *argv[])
     // main game loop    
     while(!_done)
     {
+        // UI updates
         gfc_input_update();
         gf2d_mouse_update();
         gf2d_font_update();
+
+        // entity updates
+        entity_system_think();
+        entity_system_update();
+
         //camera updates
         gf3d_vgraphics_render_start();
             
             //3D draws
-            model_queue_render(model, mat, GFC_COLOR_WHITE);
+            entity_system_draw();
 
             //2D draws
             gf2d_font_draw_line_tag("ALT+F4 to exit", FT_H1, GFC_COLOR_WHITE, gfc_vector2d(10,10));
@@ -108,7 +119,7 @@ int main(int argc,char *argv[])
     return 0;
 }
 
-void parse_arguments(int argc,char *argv[])
+void parse_arguments(int argc, char *argv[])
 {
     int a;
 

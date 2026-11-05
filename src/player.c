@@ -23,6 +23,7 @@ Entity *player_spawn(GFC_Vector3D position)
 
 	self = entity_new();
 	if (!self) return NULL;
+
 	self->position = position;
 	self->velocity = gfc_vector3d(0, 0, 0);
 
@@ -62,7 +63,7 @@ int player_think(Entity *self)
 	if (gfc_input_command_down("item_left")) move.x -= 1;
 	if (gfc_input_command_down("item_right")) move.x += 1;
 
-	self->velocity = move;
+	self->velocity = move; //gfc_vector3d(0, 0, 0);
 
 	return 1;
 }
@@ -80,5 +81,5 @@ int player_draw(Entity *self)
 {
 	if (!self) return 0;
 
-	return 1;
+	return 0;
 }

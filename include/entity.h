@@ -11,8 +11,8 @@ typedef struct Entity_S
 	GFC_Vector3D	rotation;
 	GFC_Vector3D	scale;
 	GFC_Box			bounds;
-	GFC_Vector3D	velocity;
 	GFC_Color		color;
+	GFC_Vector3D	velocity;
 
 	// Entity Functions
 

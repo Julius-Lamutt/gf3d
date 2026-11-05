@@ -60,6 +60,7 @@ Entity *entity_new()
 
 		// set defaults
 		entity_manager.entityList[i]._inuse = 1;
+		entity_manager.entityList[i].rotation = gfc_vector3d(0, 0, 0);
 		entity_manager.entityList[i].scale = gfc_vector3d(1, 1, 1);
 		entity_manager.entityList[i].color = GFC_COLOR_WHITE;
 		return &entity_manager.entityList[i];
@@ -72,6 +73,7 @@ void entity_free(Entity *self)
 	if ((!self) || (!self->_inuse)) return;
 
 	if (self->model) model_free(self->model);
+	self->_inuse = 0;
 }
 
 void entity_system_think()
@@ -101,7 +103,7 @@ void entity_system_update()
 	int i;
 	for (i = 0; i < entity_manager.entMax; i++)
 	{
-		if (entity_manager.entityList[i]._inuse) continue;
+		if (!entity_manager.entityList[i]._inuse) continue;
 		entity_update(&entity_manager.entityList[i]);
 	}
 }
@@ -124,7 +126,7 @@ void entity_system_draw()
 	int i;
 	for (i = 0; i < entity_manager.entMax; i++)
 	{
-		if (entity_manager.entityList[i]._inuse) continue;
+		if (!entity_manager.entityList[i]._inuse) continue;
 		entity_draw(&entity_manager.entityList[i]);
 	}
 }

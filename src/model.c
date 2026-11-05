@@ -84,7 +84,7 @@ void model_close()
 
     for (i = 0; i < model_manager.modelCount; i++)
     {
-        model_delete(&model_manager.modelList[i]);
+        if (model_manager.modelList[i]._refCount) model_delete(&model_manager.modelList[i]);
     }
     free(model_manager.modelList);
     if (model_manager.defaultTexture)
