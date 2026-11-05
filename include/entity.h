@@ -12,16 +12,16 @@ typedef struct Entity_S
 	GFC_Vector3D	scale;
 	GFC_Box			bounds;
 	GFC_Vector3D	velocity;
-	GFC_Color		colorMod;
+	GFC_Color		color;
 
 	// Entity Functions
 
-	int				(*think)(Entity_S *self);
-	int				(*update)(Entity_S *self);
-	int				(*draw)(Entity_S *self);
-	void			(*free)(Entity_S *self);
+	int		(*think)(struct Entity_S *self);
+	int		(*update)(struct Entity_S *self);
+	int		(*draw)(struct Entity_S *self);
+	void	(*free)(struct Entity_S *self);
 
-	void			*data;						
+	void	*data;						
 } Entity;
 
 /**
@@ -59,6 +59,8 @@ void entity_system_draw();
 
 /**
 * @brief check if entity can move
+* @param self the entity to check
+* @returns 1 if entity can move, 0 otherwise
 */
 Uint8 entity_move_check(Entity *self);
 

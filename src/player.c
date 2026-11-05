@@ -19,10 +19,12 @@ void player_free(Entity *self);
 Entity *player_spawn(GFC_Vector3D position)
 {
 	Entity *self;
+	PlayerData *data;
+
 	self = entity_new();
 	if (!self) return NULL;
 	self->position = position;
-	self->velocity = 1;
+	self->velocity = gfc_vector3d(0, 0, 0);
 
 	self->think = player_think;
 	self->update = player_update;
@@ -30,9 +32,10 @@ Entity *player_spawn(GFC_Vector3D position)
 	self->free = player_free;
 
 	self->data = gfc_allocate_array(sizeof(PlayerData), 1);
-	if (data)
+	if (self->data)
 	{
-		data->cameraFollowDistance = 0;
+		data = self->data;
+		data->cameraFollowDistance = 20;
 		data->cameraRotation = gfc_vector2d(0, 0);
 	}
 	return self;
@@ -40,7 +43,7 @@ Entity *player_spawn(GFC_Vector3D position)
 
 void player_free(Entity *self)
 {
-	PlayerEntityData *data;
+	PlayerData *data;
 
 	if ((!self) || (!self->data)) return;
 	data = (PlayerData*)self->data;
@@ -59,7 +62,7 @@ int player_think(Entity *self)
 	if (gfc_input_command_down("item_left")) move.x -= 1;
 	if (gfc_input_command_down("item_right")) move.x += 1;
 
-	player->velocity = move;
+	self->velocity = move;
 
 	return 1;
 }
@@ -68,7 +71,7 @@ int player_update(Entity *self)
 {
 	if (!self) return 0;
 
-	gfc_vector3d_add(self->position, self->velocity);
+	gfc_vector3d_add(self->position, self->position, self->velocity);
 
 	return 1;
 }

@@ -67,7 +67,7 @@ Entity *entity_new()
 	return NULL;
 }
 
-void entity_free()
+void entity_free(Entity *self)
 {
 	if ((!self) || (!self->_inuse)) return;
 
@@ -91,6 +91,9 @@ void entity_think(Entity *self)
 	{
 		if (self->think(self)) return;
 	}
+
+	// boilerplate entity think code
+
 }
 
 void entity_system_update()
@@ -105,13 +108,15 @@ void entity_system_update()
 
 void entity_update(Entity *self)
 {
-	if ((!self) || (!self_inuse)) return;
+	if ((!self) || (!self->_inuse)) return;
 
 	if (self->update)
 	{
 		if (self->update(self)) return;
 	}
-	gfc_vector3d_add(self->position, self->velocity);
+
+	// boilerplate entity update code
+	gfc_vector3d_add(self->position, self->position, self->velocity);
 }
 
 void entity_system_draw()
@@ -126,16 +131,26 @@ void entity_system_draw()
 
 void entity_draw(Entity *self)
 {
+	GFC_Matrix4 mat = {0};
+
 	if ((!self) || (!self->_inuse)) return;
 	if (self->draw)
 	{
 		if (self->draw(self)) return;
 	}
-	gfc_matrix_from_vectors(
-		ent->mat,
-		ent->position
-		ent->rotation
-		ent->scale);
 
-	model_queue_render(model, mat, color);
+	// boilerplate draw code
+	gfc_matrix4_from_vectors(
+		mat,
+		self->position,
+		self->rotation,
+		self->scale);
+
+	model_queue_render(self->model, mat, self->color);
+}
+
+Uint8 entity_move_check(Entity *self)
+{
+	if (!self) return 0;
+	return 1;
 }

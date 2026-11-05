@@ -7,13 +7,13 @@
 
 typedef struct
 {
-	Model *sky;
-	GFC_TextLine skyFile;
-	Model *terrain;
-	GFC_TextLine terrainFile;
-	GFC_Box bounds;
-	MixMusic bgMusic; // init audio before use
-	SJson *json;
+	Model			*sky;
+	GFC_TextLine	skyFile;
+	Model			*terrain;
+	GFC_TextLine	terrainFile;
+	GFC_Box			bounds;
+	Mix_Music		*bgMusic;
+	SJson			*json;
 } Level;
 
 /**
@@ -46,6 +46,7 @@ void level_draw(Level *level);
 * @param level the level to test on
 * @param edge the edge
 * @param contact the point of contact
+* @returns 1 if collision, 0 otherwise
 */
 Uint8 level_line_test(Level *level, GFC_Edge3D edge, GFC_Vector3D *contact);
 

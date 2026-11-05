@@ -1,6 +1,6 @@
 #include "simple_logger.h"
 
-#include "gf3d_load_obj.h"
+#include "gf3d_obj_load.h"
 
 #include "level.h"
 
@@ -15,7 +15,7 @@ Level *level_new()
 	}
 
 	// boilerplate code
-	gfc_matrix4_identity(level->terrainMatrix);
+	//gfc_matrix4_identity(level->terrainMatrix);
 	return level;
 }
 
@@ -53,11 +53,11 @@ Level *level_load(const char *filename)
 		level->terrain = model_load(str);
 		if (level->terrain) gfc_line_cpy(level->terrainFile, str);
 	}
-	level->bounds = gfc_box_from_config(sj_object_get_value(bounds));
+	level->bounds = gfc_box_from_config(sj_object_get_value(json, "bounds"));
 	str = sj_object_get_string(json, "music");
 	if (str)
 	{
-		level->bgMusic = gfc_dound_load_music(str);
+		level->bgMusic = gfc_sound_load_music(str);
 		if (level->bgMusic) Mix_PlayMusic(level->bgMusic, -1);
 	}
 	return level;
@@ -71,7 +71,7 @@ void level_free(Level *level)
 	if (level->terrain) model_free(level->terrain);
 	if (level->bgMusic)
 	{
-		Mix_HaltMusic(level->bgMusic);
+		Mix_HaltMusic();
 		Mix_FreeMusic(level->bgMusic);
 	}
 	if (level->json) sj_free(level->json);
@@ -85,15 +85,14 @@ void level_draw(Level *level)
 	//model_queue_render();
 }
 
-Uint8 level_line_test(Level *level, GFC_Edge3d edge, GFC_Vector3D *contact)
+Uint8 level_line_test(Level *level, GFC_Edge3D edge, GFC_Vector3D *contact)
 {
-	Mesh *mesh;
 	MeshPrimitive *prim;
 	GFC_Triangle3D t;
 	GFC_Vector3D out = {-1};
 	int i, j, c;
 
-	if ((!level) || (!level->terrain->prim) || (!level->sky->prim)) return out;
+	if ((!level) || (!level->terrain->mesh) || (!level->sky->mesh)) return 0;
 
 	c = gfc_list_count(level->terrain->mesh->primitives);
 	for (i = 0; i < c; i++)
@@ -103,10 +102,10 @@ Uint8 level_line_test(Level *level, GFC_Edge3d edge, GFC_Vector3D *contact)
 		if (!prim->objData) continue;
 		for (j = 0; j < prim->objData->face_count; j++)
 		{
-			t.a = prim->objData->faceVertices[prim->objData->outFace[j]->verts[0]].vertex;
-			t.b = prim->objData->faceVertices[prim->objData->outFace[j]->verts[1]].vertex;
-			t.c = prim->objData->faceVertices[prim->objData->outFace[j]->verts[2]].vertex;
-			if (gfc_tiangle_edge_test(edge, t, &out))
+			t.a = prim->objData->faceVertices[prim->objData->outFace[j].verts[0]].vertex;
+			t.b = prim->objData->faceVertices[prim->objData->outFace[j].verts[1]].vertex;
+			t.c = prim->objData->faceVertices[prim->objData->outFace[j].verts[2]].vertex;
+			if (gfc_triangle_edge_test(edge, t, &out))
 			{
 				if (contact) *contact = out;
 				return 1;
@@ -120,9 +119,9 @@ Uint8 level_bounds_test(Level *level, GFC_Box aabb)
 {
 	if (!level) return 0;
 
-	if (aabb.x < level.x) return 1;
-	if (aabb.y < level.y) return 1;
-	if (aabb.z < level.z) return 1;
+	if (aabb.x < level->bounds.x) return 1;
+	if (aabb.y < level->bounds.y) return 1;
+	if (aabb.z < level->bounds.z) return 1;
 
 	if (aabb.x + aabb.w > level->bounds.x + level->bounds.w) return 1;
 	if (aabb.y + aabb.h > level->bounds.y + level->bounds.h) return 1;
