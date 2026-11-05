@@ -49,10 +49,13 @@ int main(int argc,char *argv[])
     parse_arguments(argc,argv);
     init_logger("gf3d.log",0);
     slog("gf3d begin");
+
     //gfc init
     gfc_input_init("config/input.cfg");
     gfc_config_def_init();
     gfc_action_init(1024);
+    gfc_audio_init(200, 1, 0);
+
     //gf3d init
     gf3d_mesh_init(2000);
     gf3d_vgraphics_init("config/setup.cfg");
