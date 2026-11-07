@@ -43,7 +43,8 @@ int main(int argc,char *argv[])
 {
     // local variables
     Sprite *bg;
-    GFC_Matrix4 *view;
+    Model *skybox, *terrain;
+    GFC_Matrix4 *view, mat, mat2;
     Entity *player;
 
     // initializtion    
@@ -76,13 +77,21 @@ int main(int argc,char *argv[])
     player = player_spawn(gfc_vector3d(0, 0, 0));
     player->model = model_load("models/dino.model");
 
+    // skybox
+    skybox = model_load("models/sky.model");
+    gfc_matrix4_identity(mat);
+
+    // terrain
+    terrain = model_load("models/terrain.model");
+    gfc_matrix4_from_vectors(
+        mat2,
+        gfc_vector3d(0, 0 ,0),
+        gfc_vector3d(0, 0, 0),
+        gfc_vector3d(20, 20, 2)
+    );
+
     // setup the camera view
     view = gf3d_vgraphics_get_view_matrix();
-    gfc_matrix4_view(
-        *view,
-        gfc_vector3d(0, -10, 0),
-        gfc_vector3d(0, 0, 0),
-        gfc_vector3d(0, 0, 1));
 
     // main game loop    
     while(!_done)
@@ -100,6 +109,8 @@ int main(int argc,char *argv[])
         gf3d_vgraphics_render_start();
             
             //3D draws
+            model_queue_render(skybox, mat, GFC_COLOR_YELLOW);
+            model_queue_render(terrain, mat2, GFC_COLOR_GREEN);
             entity_system_draw();
 
             //2D draws

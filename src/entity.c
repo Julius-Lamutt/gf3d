@@ -73,7 +73,7 @@ void entity_free(Entity *self)
 	if ((!self) || (!self->_inuse)) return;
 
 	if (self->model) model_free(self->model);
-	self->_inuse = 0;
+	memset(self, 0, sizeof(Entity));
 }
 
 void entity_system_think()

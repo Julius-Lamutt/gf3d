@@ -3,6 +3,13 @@
 
 #include "gf3d_mesh.h"
 
+typedef enum
+{
+	PT_NONE,
+	PT_MODEL,
+	PT_SKY
+} PipelineType;
+
 typedef struct
 {
 	GFC_Matrix4     model;
@@ -17,6 +24,7 @@ typedef struct
 	GFC_TextLine		filename;			/**<name of the model*/
 	Texture				*texture;			/**<texture memory pointer*/
 	Mesh				*mesh;				/**<GPU handles for mesh data*/
+	Uint8				pipeline;			/**<type of pipeline*/
 } Model;
 
 /**
@@ -54,6 +62,12 @@ Model *model_get_by_filename(const char *filename);
 * @return NULL if pipeline does not exist, the model pipeline otherwise
 */
 Pipeline *model_get_pipeline();
+
+/*
+* @brief get the sky pipeline
+* @return NULL if pipeline does not exist, the sky pipeline otherwise
+*/
+Pipeline *model_get_sky_pipeline();
 
 /**
 * @brief given a model matrix and basic color, build the modelUBO needed to render a model

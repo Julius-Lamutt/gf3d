@@ -2,6 +2,8 @@
 
 #include "gfc_input.h"
 
+#include "gf3d_vgraphics.h"
+
 #include "level.h"
 #include "player.h"
 
@@ -26,6 +28,7 @@ Entity *player_spawn(GFC_Vector3D position)
 
 	self->position = position;
 	self->velocity = gfc_vector3d(0, 0, 0);
+	self->rotation = gfc_vector3d(0, 0, 135);
 
 	self->think = player_think;
 	self->update = player_update;
@@ -70,9 +73,22 @@ int player_think(Entity *self)
 
 int player_update(Entity *self)
 {
+	GFC_Matrix4 *view;
+	GFC_Vector3D offset;
+
 	if (!self) return 0;
 
 	gfc_vector3d_add(self->position, self->position, self->velocity);
+
+	offset = gfc_vector3d(0, -20, 0);
+	gfc_vector3d_add(offset, offset, self->position);
+	view = gf3d_vgraphics_get_view_matrix();
+	gfc_matrix4_view(
+		*view,
+		offset,
+		self->position,
+		gfc_vector3d(0, 0, 1)
+	);
 
 	return 1;
 }

@@ -13,9 +13,6 @@ Level *level_new()
 		slog("failed to allocate space for level");
 		return NULL;
 	}
-
-	// boilerplate code
-	//gfc_matrix4_identity(level->terrainMatrix);
 	return level;
 }
 
@@ -80,7 +77,10 @@ void level_free(Level *level)
 
 void level_draw(Level *level)
 {
+	GFC_Matrix4 mat;
+
 	if (!level) return;
+
 
 	//model_queue_render();
 }

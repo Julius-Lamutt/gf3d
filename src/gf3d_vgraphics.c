@@ -202,7 +202,7 @@ void gf3d_vgraphics_init(const char *config)
 
     gf3d_vgraphics.enable_3d = 1;
     model_init_system(1024);
-    renderPipe = model_get_pipeline();
+    renderPipe = model_get_sky_pipeline();
     
     gf3d_vgraphics.enable_2d = 1;
     gf2d_sprite_manager_init(1024);
