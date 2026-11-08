@@ -8,8 +8,9 @@
 
 typedef struct
 {
-	Entity		*entityList;
-	Uint32		entMax;
+	Entity		*entityList;	/**<list of entities*/
+	Uint32		entMax;			/**<max number of entities supported*/
+	Level		*level;			/**<current level*/
 } EntityManager;
 
 static EntityManager entity_manager = {0};
@@ -33,6 +34,7 @@ void entity_system_init(Uint32 entMax)
 		return;
 	}
 	entity_manager.entMax = entMax;
+	entity_manager.level = NULL;
 	slog("entity system initialized");
 	atexit(entity_system_close);
 }
@@ -74,6 +76,11 @@ void entity_free(Entity *self)
 
 	if (self->model) model_free(self->model);
 	memset(self, 0, sizeof(Entity));
+}
+
+void entity_system_set_level(Level *level)
+{
+	entity_manager.level = level;
 }
 
 void entity_system_think()
@@ -153,6 +160,23 @@ void entity_draw(Entity *self)
 
 Uint8 entity_move_check(Entity *self)
 {
-	if (!self) return 0;
+	GFC_Box bounds = {0};
+	GFC_Edge3D edge1, edge2;
+
+	if ((!self) || (!entity_manager.level)) return 0;
+
+	bounds.x = self->bounds.x + self->velocity.x - (0.5 * self->scale.x);
+	bounds.y = self->bounds.y + self->velocity.y - (0.5 * self->scale.y);
+	bounds.z = self->bounds.z + self->velocity.z - (0.5 * self->scale.z);
+	bounds.w = self->bounds.w;
+	bounds.h = self->bounds.h;
+	bounds.d = self->bounds.d;
+
+	edge1 = gfc_edge3d(bounds.x, bounds.y, bounds.z, bounds.x + bounds.w, bounds.y + bounds.h, bounds.z);
+	edge2 = gfc_edge3d(bounds.x + bounds.w, bounds.y, bounds.z, bounds.x, bounds.y + bounds.h, bounds.z);
+
+	if (level_bounds_test(entity_manager.level, bounds)) return 0;
+	if (level_line_test(entity_manager.level, edge1, NULL)) return 0;
+	if (level_line_test(entity_manager.level, edge2, NULL)) return 0;
 	return 1;
 }

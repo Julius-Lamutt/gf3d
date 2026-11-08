@@ -29,6 +29,10 @@ Entity *player_spawn(GFC_Vector3D position)
 	self->position = position;
 	self->velocity = gfc_vector3d(0, 0, 0);
 	self->rotation = gfc_vector3d(0, 0, 135);
+	self->bounds = gfc_box(
+					position.x - (0.5 * self->scale.x),
+					position.y - (0.5 * self->scale.y), 
+					position.z - (0.5 * self->scale.z), 1, 1, 1);
 
 	self->think = player_think;
 	self->update = player_update;
@@ -61,12 +65,19 @@ int player_think(Entity *self)
 
 	if (!self) return 0;
 
+	// check movement input
 	if (gfc_input_command_down("item_up")) move.y += 1;
 	if (gfc_input_command_down("item_down")) move.y -= 1;
 	if (gfc_input_command_down("item_left")) move.x -= 1;
 	if (gfc_input_command_down("item_right")) move.x += 1;
 
-	self->velocity = move; //gfc_vector3d(0, 0, 0);
+	self->velocity = move;
+
+	// gravity
+	//self->velocity.z = -0.125;
+
+	// collision detection
+	if (!entity_move_check(self)) self->velocity = gfc_vector3d(0, 0, 0);
 
 	return 1;
 }
@@ -78,8 +89,16 @@ int player_update(Entity *self)
 
 	if (!self) return 0;
 
+	// update position
 	gfc_vector3d_add(self->position, self->position, self->velocity);
 
+	// update bounding box
+	self->bounds.x = self->position.x - 0.5;
+	self->bounds.y = self->position.y - 0.5;
+	self->bounds.z = self->position.z - 0.5;
+	//slog("x: %f, y: %f, z: %f", self->bounds.x, self->bounds.y, self->bounds.z);
+
+	// update camera
 	offset = gfc_vector3d(0, -20, 0);
 	gfc_vector3d_add(offset, offset, self->position);
 	view = gf3d_vgraphics_get_view_matrix();

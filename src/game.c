@@ -22,6 +22,8 @@
 #include "gf3d_mesh.h"
 
 #include "model.h"
+#include "draw_3d.h"
+#include "level.h"
 #include "entity.h"
 #include "player.h"
 
@@ -43,9 +45,9 @@ int main(int argc,char *argv[])
 {
     // local variables
     Sprite *bg;
-    Model *skybox, *terrain;
-    GFC_Matrix4 *view, mat, mat2;
     Entity *player;
+    Level *level;
+    GFC_Box cube;
 
     // initializtion    
     parse_arguments(argc,argv);
@@ -64,6 +66,9 @@ int main(int argc,char *argv[])
     gf2d_font_init("config/font.cfg");
     gf2d_actor_init(1000);
 
+    // draw_3d init
+    draw_3d_init();
+
     // entity init
     entity_system_init(1024);
     
@@ -74,24 +79,15 @@ int main(int argc,char *argv[])
     gf2d_mouse_load("actors/mouse.actor");
 
     // player entity
-    player = player_spawn(gfc_vector3d(0, 0, 0));
+    player = player_spawn(gfc_vector3d(0, 0, 10));
     player->model = model_load("models/dino.model");
 
-    // skybox
-    skybox = model_load("models/sky.model");
-    gfc_matrix4_identity(mat);
+    // level
+    level = level_load("levels/test_level.json");
+    entity_system_set_level(level);
 
-    // terrain
-    terrain = model_load("models/terrain.model");
-    gfc_matrix4_from_vectors(
-        mat2,
-        gfc_vector3d(0, 0 ,0),
-        gfc_vector3d(0, 0, 0),
-        gfc_vector3d(20, 20, 2)
-    );
-
-    // setup the camera view
-    view = gf3d_vgraphics_get_view_matrix();
+    // cube
+    cube = gfc_box(0, 5, 20, 1, 1, 1);
 
     // main game loop    
     while(!_done)
@@ -109,9 +105,9 @@ int main(int argc,char *argv[])
         gf3d_vgraphics_render_start();
             
             //3D draws
-            model_queue_render(skybox, mat, GFC_COLOR_YELLOW);
-            model_queue_render(terrain, mat2, GFC_COLOR_GREEN);
+            level_draw(level);
             entity_system_draw();
+            draw_3d_cube(cube);
 
             //2D draws
             gf2d_font_draw_line_tag("ALT+F4 to exit", FT_H1, GFC_COLOR_WHITE, gfc_vector2d(10,10));

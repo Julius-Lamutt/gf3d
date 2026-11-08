@@ -43,6 +43,12 @@ Entity *entity_new();
 void entity_free(Entity *self);
 
 /**
+* @brief set the current level for all entities
+* @param level the level to set
+*/
+void entity_system_set_level(Level *level);
+
+/**
 * @brief run the think functions for all active entities
 */
 void entity_system_think();
