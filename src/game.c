@@ -86,9 +86,6 @@ int main(int argc,char *argv[])
     level = level_load("levels/test_level.json");
     entity_system_set_level(level);
 
-    // cube
-    cube = gfc_box(0, 5, 20, 1, 1, 1);
-
     // main game loop    
     while(!_done)
     {
@@ -107,7 +104,6 @@ int main(int argc,char *argv[])
             //3D draws
             level_draw(level);
             entity_system_draw();
-            draw_3d_cube(cube);
 
             //2D draws
             gf2d_font_draw_line_tag("ALT+F4 to exit", FT_H1, GFC_COLOR_WHITE, gfc_vector2d(10,10));

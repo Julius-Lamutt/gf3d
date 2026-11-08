@@ -4,8 +4,10 @@
 
 typedef struct
 {
-	Model *cube;
-	Model *sphere;
+	Model *cube;			/**<model for unit cube*/
+	Model *cubeOutline;		/**<model for unit cube outline*/
+	Model *sphere;			/**<model for unit sphere*/
+	Model *sphereOutline;	/**<model for unit sphere outline*/
 } Draw3dData;
 
 Draw3dData draw_3d_data = {0};
@@ -14,18 +16,22 @@ void draw_3d_close();
 
 void draw_3d_close()
 {
-	model_free(draw_3d_data.cube);
-	model_free(draw_3d_data.sphere);
+	if (draw_3d_data.cube) model_free(draw_3d_data.cube);
+	if (draw_3d_data.cubeOutline) model_free(draw_3d_data.cubeOutline);
+	if (draw_3d_data.sphere) model_free(draw_3d_data.sphere);
+	if (draw_3d_data.sphereOutline) model_free(draw_3d_data.sphereOutline);
 }
 
 void draw_3d_init()
 {
 	draw_3d_data.cube = model_load("models/cube.model");
+	draw_3d_data.cubeOutline = model_load("models/cube_outline.model");
 	draw_3d_data.sphere = model_load("models/sphere.model");
+	draw_3d_data.sphereOutline = model_load("models/sphere_outline.model");
 	atexit(draw_3d_close);
 }
 
-void draw_3d_cube(GFC_Box cube)
+void draw_3d_cube(GFC_Box cube, GFC_Color color)
 {
 	GFC_Matrix4 mat;
 
@@ -36,10 +42,24 @@ void draw_3d_cube(GFC_Box cube)
 		gfc_vector3d(cube.w, cube.h, cube.d)
 	);
 
-	model_queue_render(draw_3d_data.cube, mat, GFC_COLOR_MAGENTA);
+	model_queue_render(draw_3d_data.cube, mat, color);
 }
 
-void draw_3d_sphere(GFC_Sphere sphere)
+void draw_3d_cube_outline(GFC_Box cube, GFC_Color color)
+{
+	GFC_Matrix4 mat;
+
+	gfc_matrix4_from_vectors(
+		mat,
+		gfc_vector3d(cube.x - (cube.w * 0.5), cube.y - (cube.h * 0.5), cube.z - (cube.d * 0.5)),
+		gfc_vector3d(0, 0, 0),
+		gfc_vector3d(cube.w, cube.h, cube.d)
+	);
+
+	model_queue_render(draw_3d_data.cubeOutline, mat, color);
+}
+
+void draw_3d_sphere(GFC_Sphere sphere, GFC_Color color)
 {
 	GFC_Matrix4 mat;
 
@@ -50,5 +70,19 @@ void draw_3d_sphere(GFC_Sphere sphere)
 		gfc_vector3d(sphere.r, sphere.r, sphere.r)
 	);
 
-	model_queue_render(draw_3d_data.sphere, mat, GFC_COLOR_MAGENTA);
+	model_queue_render(draw_3d_data.sphere, mat, color);
+}
+
+void draw_3d_sphere_outline(GFC_Sphere sphere, GFC_Color color)
+{
+	GFC_Matrix4 mat;
+
+	gfc_matrix4_from_vectors(
+		mat,
+		gfc_vector3d(sphere.x - sphere.r, sphere.y - sphere.r, sphere.z - sphere.r),
+		gfc_vector3d(0, 0, 0),
+		gfc_vector3d(sphere.r, sphere.r, sphere.r)
+	);
+
+	model_queue_render(draw_3d_data.sphereOutline, mat, color);
 }

@@ -7,7 +7,8 @@ typedef enum
 {
 	PT_NONE,
 	PT_MODEL,
-	PT_SKY
+	PT_SKY,
+	PT_OUTLINE
 } PipelineType;
 
 typedef struct

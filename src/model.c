@@ -11,11 +11,12 @@
 
 typedef struct
 {
-	Model		*modelList;
-	Uint32		modelCount;
-    Pipeline    *modelPipe;
-    Pipeline    *skyPipe;
-    Texture     *defaultTexture;
+	Model		*modelList;         /**<list of models that can be rendered*/
+	Uint32		modelCount;         /**<max number of models supported*/
+    Pipeline    *modelPipe;         /**<model pipeline*/
+    Pipeline    *skyPipe;           /**<sky pipeline*/
+    Pipeline    *outlinePipe;       /**<outline pipeline*/
+    Texture     *defaultTexture;    /**<texture to be used if one is not given*/
 } ModelManager;
 
 static ModelManager model_manager = {0};
@@ -50,6 +51,7 @@ void model_init_system(Uint32 modelCount)
     gf3d_mesh_set_device(gf3d_vgraphics_get_default_logical_device());
     gf3d_mesh_get_attribute_descriptions(&count);
 
+    // sky pipeline first (clears previous 3d renders)
     model_manager.skyPipe = gf3d_pipeline_create_from_config(
         gf3d_vgraphics_get_default_logical_device(),
         "config/sky_pipeline.cfg",
@@ -63,7 +65,7 @@ void model_init_system(Uint32 modelCount)
     );
     if (!model_manager.skyPipe)
     {
-        slog("exit status 2: failed to make sky pipeline!");
+        slog("exit status 1: failed to make sky pipeline!");
         slog_sync();
         model_close();
         return;
@@ -82,7 +84,26 @@ void model_init_system(Uint32 modelCount)
     );
     if (!model_manager.modelPipe)
     {
-        slog("exit status 1: failed to make model pipeline!");
+        slog("exit status 2: failed to make model pipeline!");
+        slog_sync();
+        model_close();
+        return;
+    }
+
+    model_manager.outlinePipe = gf3d_pipeline_create_from_config(
+        gf3d_vgraphics_get_default_logical_device(),
+        "config/outline_pipeline.cfg",
+        gf3d_vgraphics_get_view_extent(),
+        1000,
+        gf3d_mesh_get_bind_description(),
+        gf3d_mesh_get_attribute_descriptions(NULL),
+        count,
+        sizeof(ModelUBO),
+        VK_INDEX_TYPE_UINT32
+    );
+    if (!model_manager.outlinePipe)
+    {
+        slog("exit status 3: failed to make outline pipeline!");
         slog_sync();
         model_close();
         return;
@@ -206,6 +227,7 @@ Model *model_load(const char *filename)
     {
         if (gfc_strlcmp(str3, "model") == 0) pipeline = PT_MODEL;
         else if (gfc_strlcmp(str3, "sky") == 0) pipeline = PT_SKY;
+        else if (gfc_strlcmp(str3, "outline") == 0) pipeline = PT_OUTLINE;
         else
         {
             slog("failed to parse pipeline data for model file %s", filename);
@@ -289,4 +311,5 @@ void model_queue_render(Model *model, GFC_Matrix4 mat, GFC_Color colorMod)
 
     if (model->pipeline == PT_MODEL) gf3d_mesh_queue_render(model->mesh, model_manager.modelPipe, &ubo, model->texture);
     else if (model->pipeline == PT_SKY) gf3d_mesh_queue_render(model->mesh, model_manager.skyPipe, &ubo, model->texture);
+    else if (model->pipeline == PT_OUTLINE) gf3d_mesh_queue_render(model->mesh, model_manager.outlinePipe, &ubo, model->texture);
 }
