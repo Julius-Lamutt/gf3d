@@ -2,9 +2,12 @@
 
 #include "gfc_color.h"
 #include "model.h"
+#include "draw_3d.h"
 #include "level.h"
 
 #include "entity.h"
+
+extern int __COLLISION;
 
 typedef struct
 {
@@ -96,6 +99,7 @@ void entity_system_think()
 void entity_think(Entity *self)
 {
 	if ((!self) || (!self->_inuse)) return;
+
 	if (self->think)
 	{
 		if (self->think(self)) return;
@@ -143,6 +147,9 @@ void entity_draw(Entity *self)
 	GFC_Matrix4 mat = {0};
 
 	if ((!self) || (!self->_inuse)) return;
+
+	if (__COLLISION) draw_3d_cube_outline(self->bounds, GFC_COLOR_MAGENTA);
+
 	if (self->draw)
 	{
 		if (self->draw(self)) return;
@@ -165,9 +172,9 @@ Uint8 entity_move_check(Entity *self)
 
 	if ((!self) || (!entity_manager.level)) return 0;
 
-	bounds.x = self->bounds.x + self->velocity.x - (0.5 * self->scale.x);
-	bounds.y = self->bounds.y + self->velocity.y - (0.5 * self->scale.y);
-	bounds.z = self->bounds.z + self->velocity.z - (0.5 * self->scale.z);
+	bounds.x = self->bounds.x + self->velocity.x - 1.5;
+	bounds.y = self->bounds.y + self->velocity.y - 1.5;
+	bounds.z = self->bounds.z + self->velocity.z - 1.5;
 	bounds.w = self->bounds.w;
 	bounds.h = self->bounds.h;
 	bounds.d = self->bounds.d;

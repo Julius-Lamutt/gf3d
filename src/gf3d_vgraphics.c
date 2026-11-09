@@ -83,6 +83,7 @@ typedef struct
 static vGraphics gf3d_vgraphics = {0};
 
 int __DEBUG = 0;
+int __COLLISION = 0;
 
 void gf3d_vgraphics_close();
 void gf3d_vgraphics_logical_device_close();

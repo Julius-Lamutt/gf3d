@@ -22,12 +22,12 @@
 #include "gf3d_mesh.h"
 
 #include "model.h"
-#include "draw_3d.h"
 #include "level.h"
 #include "entity.h"
 #include "player.h"
 
 extern int __DEBUG;
+extern int __COLLISION;
 
 static int _done = 0;
 static Uint32 frame_delay = 33;
@@ -47,7 +47,6 @@ int main(int argc,char *argv[])
     Sprite *bg;
     Entity *player;
     Level *level;
-    GFC_Box cube;
 
     // initializtion    
     parse_arguments(argc,argv);
@@ -126,13 +125,11 @@ void parse_arguments(int argc, char *argv[])
 {
     int a;
 
-    for (a = 1; a < argc;a++)
+    for (a = 1; a < argc; a++)
     {
-        if (strcmp(argv[a],"--debug") == 0)
-        {
-            __DEBUG = 1;
-        }
-    }    
+        if (strcmp(argv[a], "--debug") == 0) __DEBUG = 1;
+        else if (strcmp(argv[a], "--collision") == 0) __COLLISION = 1;
+    }
 }
 
 void game_frame_delay()

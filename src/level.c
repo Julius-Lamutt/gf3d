@@ -2,7 +2,11 @@
 
 #include "gf3d_obj_load.h"
 
+#include "draw_3d.h"
+
 #include "level.h"
+
+extern int __COLLISION;
 
 Level *level_new()
 {
@@ -19,7 +23,6 @@ Level *level_new()
 Level *level_load(const char *filename)
 {
 	SJson *json;
-	SJson *data;
 	const char *str;
 	Level *level;
 
@@ -81,12 +84,14 @@ void level_draw(Level *level)
 
 	if (!level) return;
 
+	if (__COLLISION) draw_3d_cube_outline(level->bounds, GFC_COLOR_MAGENTA);
+
 	gfc_matrix4_identity(mat);
 	gfc_matrix4_from_vectors(
 		mat2,
 		gfc_vector3d(0, 0 ,0),
 		gfc_vector3d(0, 0, 0),
-		gfc_vector3d(1, 1, 1)
+		gfc_vector3d(5, 5, 2)
 	);
 	model_queue_render(level->sky, mat, GFC_COLOR_BLUE);
 	model_queue_render(level->terrain, mat2, GFC_COLOR_GREEN);

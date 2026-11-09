@@ -37,7 +37,7 @@ void draw_3d_cube(GFC_Box cube, GFC_Color color)
 
 	gfc_matrix4_from_vectors(
 		mat,
-		gfc_vector3d(cube.x - (cube.w * 0.5), cube.y - (cube.h * 0.5), cube.z - (cube.d * 0.5)),
+		gfc_vector3d(cube.x + (cube.w * 0.5), cube.y + (cube.h * 0.5), cube.z + (cube.d * 0.5)),
 		gfc_vector3d(0, 0, 0),
 		gfc_vector3d(cube.w, cube.h, cube.d)
 	);
@@ -51,7 +51,7 @@ void draw_3d_cube_outline(GFC_Box cube, GFC_Color color)
 
 	gfc_matrix4_from_vectors(
 		mat,
-		gfc_vector3d(cube.x - (cube.w * 0.5), cube.y - (cube.h * 0.5), cube.z - (cube.d * 0.5)),
+		gfc_vector3d(cube.x + (cube.w * 0.5), cube.y + (cube.h * 0.5), cube.z + (cube.d * 0.5)),
 		gfc_vector3d(0, 0, 0),
 		gfc_vector3d(cube.w, cube.h, cube.d)
 	);
@@ -65,7 +65,7 @@ void draw_3d_sphere(GFC_Sphere sphere, GFC_Color color)
 
 	gfc_matrix4_from_vectors(
 		mat,
-		gfc_vector3d(sphere.x - sphere.r, sphere.y - sphere.r, sphere.z - sphere.r),
+		gfc_vector3d(sphere.x + sphere.r, sphere.y + sphere.r, sphere.z + sphere.r),
 		gfc_vector3d(0, 0, 0),
 		gfc_vector3d(sphere.r, sphere.r, sphere.r)
 	);
@@ -79,7 +79,7 @@ void draw_3d_sphere_outline(GFC_Sphere sphere, GFC_Color color)
 
 	gfc_matrix4_from_vectors(
 		mat,
-		gfc_vector3d(sphere.x - sphere.r, sphere.y - sphere.r, sphere.z - sphere.r),
+		gfc_vector3d(sphere.x + sphere.r, sphere.y + sphere.r, sphere.z + sphere.r),
 		gfc_vector3d(0, 0, 0),
 		gfc_vector3d(sphere.r, sphere.r, sphere.r)
 	);
