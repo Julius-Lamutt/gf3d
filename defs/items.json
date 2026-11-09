@@ -1,0 +1,11 @@
+{
+  "items": 
+  [
+    {
+      "name": "item_health",
+      "model": "models/cube.model",
+      "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
+      "color": [0, 255, 0, 255]
+    }
+  ]
+}

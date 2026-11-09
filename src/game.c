@@ -22,9 +22,11 @@
 #include "gf3d_mesh.h"
 
 #include "model.h"
+#include "draw_3d.h"
 #include "level.h"
 #include "entity.h"
 #include "player.h"
+#include "item.h"
 
 extern int __DEBUG;
 extern int __COLLISION;
@@ -45,7 +47,7 @@ int main(int argc,char *argv[])
 {
     // local variables
     Sprite *bg;
-    Entity *player;
+    Entity *player, *health;
     Level *level;
 
     // initializtion    
@@ -79,7 +81,9 @@ int main(int argc,char *argv[])
 
     // player entity
     player = player_spawn(gfc_vector3d(0, 0, 10));
-    player->model = model_load("models/dino.model");
+
+    // health item
+    health = item_spawn("item_health", gfc_vector3d(0, 5, 10));
 
     // level
     level = level_load("levels/test_level.json");

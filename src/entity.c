@@ -18,10 +18,11 @@ typedef struct
 
 static EntityManager entity_manager = {0};
 
-void entity_system_close();
-void entity_think(Entity *ent);
-void entity_update(Entity *ent);
-void entity_draw(Entity *ent);
+static void entity_system_close();
+static void entity_think(Entity *self);
+static void entity_update(Entity *self);
+static void entity_draw(Entity *self);
+static Uint8 entity_touch_test(Entity *self, Entity *other);
 
 void entity_system_init(Uint32 entMax)
 {
@@ -42,7 +43,7 @@ void entity_system_init(Uint32 entMax)
 	atexit(entity_system_close);
 }
 
-void entity_system_close()
+static void entity_system_close()
 {
 	int i;
 
@@ -62,6 +63,15 @@ Entity *entity_new()
 	for (i = 0; i < entity_manager.entMax; i++)
 	{
 		if (entity_manager.entityList[i]._inuse) continue;
+		memset(&entity_manager.entityList[i], 0, sizeof(Entity));
+
+		// init list of entity touches
+		entity_manager.entityList[i].touches = gfc_list_new();
+		if (!entity_manager.entityList[i].touches)
+		{
+			slog("failed to allocate list of entity touches");
+			return NULL;
+		}
 
 		// set defaults
 		entity_manager.entityList[i]._inuse = 1;
@@ -70,6 +80,7 @@ Entity *entity_new()
 		entity_manager.entityList[i].color = GFC_COLOR_WHITE;
 		return &entity_manager.entityList[i];
 	}
+	slog("no more available entities");
 	return NULL;
 }
 
@@ -78,7 +89,9 @@ void entity_free(Entity *self)
 	if ((!self) || (!self->_inuse)) return;
 
 	if (self->model) model_free(self->model);
-	memset(self, 0, sizeof(Entity));
+	if (self->touches) gfc_list_delete(self->touches);
+	if (self->free) self->free(self);
+	self->_inuse = 0;
 }
 
 void entity_system_set_level(Level *level)
@@ -96,7 +109,7 @@ void entity_system_think()
 	}
 }
 
-void entity_think(Entity *self)
+static void entity_think(Entity *self)
 {
 	if ((!self) || (!self->_inuse)) return;
 
@@ -119,7 +132,7 @@ void entity_system_update()
 	}
 }
 
-void entity_update(Entity *self)
+static void entity_update(Entity *self)
 {
 	if ((!self) || (!self->_inuse)) return;
 
@@ -142,7 +155,7 @@ void entity_system_draw()
 	}
 }
 
-void entity_draw(Entity *self)
+static void entity_draw(Entity *self)
 {
 	GFC_Matrix4 mat = {0};
 
@@ -172,9 +185,9 @@ Uint8 entity_move_check(Entity *self)
 
 	if ((!self) || (!entity_manager.level)) return 0;
 
-	bounds.x = self->bounds.x + self->velocity.x - 1.5;
-	bounds.y = self->bounds.y + self->velocity.y - 1.5;
-	bounds.z = self->bounds.z + self->velocity.z - 1.5;
+	bounds.x = self->bounds.x + self->velocity.x - 0.5 * self->bounds.w * self->scale.x;
+	bounds.y = self->bounds.y + self->velocity.y - 0.5 * self->bounds.h * self->scale.y;
+	bounds.z = self->bounds.z + self->velocity.z - 0.5 * self->bounds.d * self->scale.z;
 	bounds.w = self->bounds.w;
 	bounds.h = self->bounds.h;
 	bounds.d = self->bounds.d;
@@ -186,4 +199,67 @@ Uint8 entity_move_check(Entity *self)
 	if (level_line_test(entity_manager.level, edge1, NULL)) return 0;
 	if (level_line_test(entity_manager.level, edge2, NULL)) return 0;
 	return 1;
+}
+
+void entity_get_touches(Entity *self)
+{
+	int i;
+	Entity *other;
+
+	gfc_list_clear(self->touches);
+	for (i = 0; i < entity_manager.entMax; i++)
+	{
+		other = &entity_manager.entityList[i];
+		if (!other || !other->_inuse) continue;
+		if (other == self) continue;
+
+		// discard touches with entities not part of collision mask
+		switch (other->layer)
+		{
+		case EL_PLAYER:
+			if (!(self->mask & EL_PLAYER)) continue;
+			break;
+
+		case EL_MONSTER:
+			if (!(self->mask & EL_MONSTER)) continue;
+			break;
+
+		case EL_ITEM:
+			if (!(self->mask & EL_ITEM)) continue;
+			break;
+
+		case EL_PROJECTILE:
+			if (!(self->mask & EL_PROJECTILE)) continue;
+			break;
+
+		case EL_WORLD:
+			if (!(self->mask & EL_WORLD)) continue;
+			break;
+		}
+
+		if (entity_touch_test(self, other)) gfc_list_append(self->touches, other);
+	}
+}
+
+static Uint8 entity_touch_test(Entity *self, Entity *other)
+{
+	GFC_Box selfBox, otherBox;
+
+	if ((!self) || (!other)) return 0;
+
+	selfBox.x = self->bounds.x + self->velocity.x - 0.5 * self->bounds.w * self->scale.x;
+	selfBox.y = self->bounds.y + self->velocity.y - 0.5 * self->bounds.h * self->scale.y;
+	selfBox.z = self->bounds.z + self->velocity.z - 0.5 * self->bounds.d * self->scale.z;
+	selfBox.w = self->bounds.w;
+	selfBox.h = self->bounds.h;
+	selfBox.d = self->bounds.d;
+
+	otherBox.x = other->bounds.x + other->velocity.x - 0.5 * other->bounds.w * other->scale.x;
+	otherBox.y = other->bounds.y + other->velocity.y - 0.5 * other->bounds.h * other->scale.y;
+	otherBox.z = other->bounds.z + other->velocity.z - 0.5 * other->bounds.d * other->scale.z;
+	otherBox.w = other->bounds.w;
+	otherBox.h = other->bounds.h;
+	otherBox.d = other->bounds.d;
+
+	return gfc_box_overlap(selfBox, otherBox);
 }

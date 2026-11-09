@@ -1,18 +1,50 @@
 #ifndef __ENTITY_H__
 #define __ENTITY_H__
 
+#include "model.h"
+#include "level.h"
+
+#define NO_MASK			(EL_NONE)
+#define PLAYER_MASK		(EL_MONSTER|EL_ITEM|EL_PROJECTILE|EL_WORLD)
+#define MONSTER_MASK	(EL_PLAYER|EL_MONSTER|EL_PROJECTILE|EL_WORLD)
+#define ITEM_MASK		(EL_PLAYER|EL_WORLD)
+#define PROJECTILE_MASK (EL_PLAYER|EL_MONSTER|EL_WORLD)
+#define WORLD_MASK		(EL_PLAYER|EL_MONSTER|EL_PROJECTILE)
+#define ALL_MASK		(EL_ALL)
+
+#define PLAYER_CLIP		(EL_PLAYER)
+#define MONSTER_CLIP    (EL_MONSTER)
+
+typedef enum
+{
+	EL_NONE = 0,
+	EL_PLAYER = 1,
+	EL_MONSTER = 2,
+	EL_ITEM = 4,
+	EL_PROJECTILE = 8,
+	EL_WORLD = 16,
+	EL_ALL = 31
+} EntityLayers;
+
 typedef struct Entity_S
 {
 	// Basic Entity Data
 
-	Uint8			_inuse;
+	Uint8			_inuse;		/**<no touchy*/
+	GFC_TextLine	name;
+	Uint8			layer;
 	Model			*model;
+	GFC_Color		color;
+
+	// Physics Data
+
+	Uint8			mask;
+	GFC_Box			bounds;
 	GFC_Vector3D	position;
 	GFC_Vector3D	rotation;
 	GFC_Vector3D	scale;
-	GFC_Box			bounds;
-	GFC_Color		color;
 	GFC_Vector3D	velocity;
+	GFC_List		*touches;	/**<entities touched this frame*/
 
 	// Entity Functions
 
@@ -70,5 +102,10 @@ void entity_system_draw();
 */
 Uint8 entity_move_check(Entity *self);
 
-#endif
+/**
+* @brief get the entities touched this frame
+* @param self the entity to find touched for
+*/
+void entity_get_touches(Entity *self);
 
+#endif

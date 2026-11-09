@@ -1,5 +1,6 @@
 #include "simple_logger.h"
 
+#include "gfc_text.h"
 #include "gfc_input.h"
 #include "gfc_config.h"
 
@@ -19,6 +20,7 @@ static int player_think(Entity *self);
 static int player_update(Entity *self);
 static int player_draw(Entity *self);
 static void player_free(Entity *self);
+static void player_handle_touches(Entity *self);
 
 Entity *player_load(const char *filename)
 {
@@ -87,6 +89,8 @@ Entity *player_spawn(GFC_Vector3D position)
 	self = player_load("defs/entities/player.json");
 	if (!self) return NULL;
 
+	self->layer = EL_PLAYER;
+	self->mask = PLAYER_MASK;
 	self->position = position;
 	self->velocity = gfc_vector3d(0, 0, 0);
 	self->rotation = gfc_vector3d(0, 0, 135);
@@ -110,7 +114,7 @@ Entity *player_spawn(GFC_Vector3D position)
 	return self;
 }
 
-void player_free(Entity *self)
+static void player_free(Entity *self)
 {
 	PlayerData *data;
 
@@ -120,11 +124,13 @@ void player_free(Entity *self)
 	self->data = NULL;
 }
 
-int player_think(Entity *self)
+static int player_think(Entity *self)
 {
+	PlayerData *data;
 	GFC_Vector3D move = {0};
 
-	if (!self) return 0;
+	if ((!self) || (!self->data)) return 0;
+	data = (PlayerData*) self->data;
 
 	// check movement input
 	if (gfc_input_command_down("item_up")) move.y += 1;
@@ -140,15 +146,20 @@ int player_think(Entity *self)
 	// collision detection
 	if (!entity_move_check(self)) self->velocity = gfc_vector3d(0, 0, 0);
 
+	// handle entity touches for this frame
+	player_handle_touches(self);
+
 	return 1;
 }
 
-int player_update(Entity *self)
+static int player_update(Entity *self)
 {
+	PlayerData *data;
 	GFC_Matrix4 *view;
 	GFC_Vector3D offset;
 
-	if (!self) return 0;
+	if ((!self) || (!self->data)) return 0;
+	data = (PlayerData*) self->data;
 
 	// update position
 	gfc_vector3d_add(self->position, self->position, self->velocity);
@@ -173,9 +184,48 @@ int player_update(Entity *self)
 	return 1;
 }
 
-int player_draw(Entity *self)
+static int player_draw(Entity *self)
 {
 	if (!self) return 0;
 
 	return 0;
+}
+
+static void player_handle_touches(Entity *self)
+{
+	int i, c;
+	Entity *other;
+	PlayerData *data;
+
+	if ((!self) || !(self->data)) return;
+	data = (PlayerData*) self->data;
+
+	entity_get_touches(self);
+
+	c = gfc_list_get_count(self->touches);
+	for (i = 0; i < c; i++)
+	{
+		other = gfc_list_get_nth(self->touches, i);
+		if (!other) continue;
+		
+		if (other->layer == EL_MONSTER)
+		{
+			continue;
+		}
+		else if (other->layer == EL_ITEM)
+		{
+			if (gfc_strlcmp(other->name, "item_health") == 0)
+			{
+				entity_free(other);
+			}
+		}
+		else if (other->layer == EL_PROJECTILE)
+		{
+			continue;
+		}
+		else if (other->layer == EL_WORLD)
+		{
+			continue;
+		}
+	}
 }

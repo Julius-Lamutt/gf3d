@@ -94,7 +94,7 @@ void level_draw(Level *level)
 		gfc_vector3d(5, 5, 2)
 	);
 	model_queue_render(level->sky, mat, GFC_COLOR_BLUE);
-	model_queue_render(level->terrain, mat2, GFC_COLOR_GREEN);
+	model_queue_render(level->terrain, mat2, gfc_color8(30, 200, 30, 200));
 }
 
 Uint8 level_line_test(Level *level, GFC_Edge3D edge, GFC_Vector3D *contact)
