@@ -146,7 +146,7 @@ static int player_think(Entity *self)
 	self->velocity = move;
 
 	// gravity
-	//self->velocity.z = -0.125;
+	self->velocity.z = -0.125;
 
 	// collision detection
 	if (!entity_move_check(self)) self->velocity = gfc_vector3d(0, 0, 0);

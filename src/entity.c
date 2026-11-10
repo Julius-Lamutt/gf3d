@@ -192,12 +192,18 @@ Uint8 entity_move_check(Entity *self)
 	bounds.h = self->bounds.h;
 	bounds.d = self->bounds.d;
 
-	edge1 = gfc_edge3d(bounds.x, bounds.y, bounds.z, bounds.x + bounds.w, bounds.y + bounds.h, bounds.z + bounds.d);
+	edge1 = gfc_edge3d(bounds.x + 0.5*bounds.w, bounds.y + 0.5*bounds.h, bounds.z,
+				bounds.x + 0.5*bounds.w, bounds.y + 0.5*bounds.h, bounds.z + 0.5*bounds.d);
+	
 	edge2 = gfc_edge3d(bounds.x + bounds.w, bounds.y, bounds.z, bounds.x, bounds.y + bounds.h, bounds.z);
 
+	// entities should not leave world bounds
 	if (level_bounds_test(entity_manager.level, bounds)) return 0;
-	if (level_line_test(entity_manager.level, edge1, NULL)) return 0;
-	if (level_line_test(entity_manager.level, edge2, NULL)) return 0;
+
+	// if entity hits top or bottom of a mesh, halt z movement
+	if (level_line_test(entity_manager.level, edge1, NULL)) self->velocity.z = 0;
+
+	//if (level_line_test(entity_manager.level, edge2, NULL)) self->velocity.z = 0;
 	return 1;
 }
 

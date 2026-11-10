@@ -2,6 +2,6 @@
   "player": 
   {
     "model": "models/dino.model",
-    "bounds": {"m": [0, 0, 0], "s": [4, 4, 5]}
+    "bounds": {"m": [0, 0, 0], "s": [4, 4, 7.5]}
   }
 }

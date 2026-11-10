@@ -3,7 +3,6 @@
 #include "gf3d_obj_load.h"
 
 #include "draw_3d.h"
-
 #include "level.h"
 
 extern int __COLLISION;
@@ -89,19 +88,21 @@ void level_draw(Level *level)
 	gfc_matrix4_identity(mat);
 	gfc_matrix4_from_vectors(
 		mat2,
-		gfc_vector3d(0, 0 ,0),
 		gfc_vector3d(0, 0, 0),
-		gfc_vector3d(1, 1, 1)
+		gfc_vector3d(0, 0, 0),
+		gfc_vector3d(100, 100, 1)
 	);
 	model_queue_render(level->sky, mat, GFC_COLOR_BLUE);
-	model_queue_render(level->terrain, mat2, gfc_color8(30, 200, 30, 200));
+	model_queue_render(level->terrain, mat2, gfc_color8(120, 120, 120, 255));
 }
 
 Uint8 level_line_test(Level *level, GFC_Edge3D edge, GFC_Vector3D *contact)
 {
 	MeshPrimitive *prim;
 	GFC_Triangle3D t;
+	GFC_Vector4D vec4;
 	GFC_Vector3D out = {-1};
+	GFC_Matrix4 mat;
 	int i, j, c;
 
 	if ((!level) || (!level->terrain->mesh) || (!level->sky->mesh)) return 0;
@@ -117,6 +118,24 @@ Uint8 level_line_test(Level *level, GFC_Edge3D edge, GFC_Vector3D *contact)
 			t.a = prim->objData->faceVertices[prim->objData->outFace[j].verts[0]].vertex;
 			t.b = prim->objData->faceVertices[prim->objData->outFace[j].verts[1]].vertex;
 			t.c = prim->objData->faceVertices[prim->objData->outFace[j].verts[2]].vertex;
+
+			// apply transformations to triangle to match transformations to mesh
+			gfc_matrix4_from_vectors(
+				mat,
+				gfc_vector3d(0, 0, 0),
+				gfc_vector3d(0, 0, 0),
+				gfc_vector3d(100, 100, 1)
+			);
+
+			gfc_matrix4_v_multiply(&vec4, gfc_vector3dw(t.a, 1.0), mat);
+			gfc_vector3d_copy(t.a, vec4);
+
+			gfc_matrix4_v_multiply(&vec4, gfc_vector3dw(t.b, 1.0), mat);
+			gfc_vector3d_copy(t.b, vec4);
+
+			gfc_matrix4_v_multiply(&vec4, gfc_vector3dw(t.c, 1.0), mat);
+			gfc_vector3d_copy(t.c, vec4);
+
 			if (gfc_triangle_edge_test(edge, t, &out))
 			{
 				if (contact) *contact = out;

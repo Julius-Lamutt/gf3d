@@ -80,7 +80,7 @@ int main(int argc,char *argv[])
     gf2d_mouse_load("actors/mouse.actor");
 
     // player entity
-    player = player_spawn(gfc_vector3d(0, 0, 10));
+    player = player_spawn(gfc_vector3d(5, 5, 10));
 
     // health item
     health = item_spawn("item_health", gfc_vector3d(0, 5, 10));
