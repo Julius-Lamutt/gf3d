@@ -192,7 +192,7 @@ Uint8 entity_move_check(Entity *self)
 	bounds.h = self->bounds.h;
 	bounds.d = self->bounds.d;
 
-	edge1 = gfc_edge3d(bounds.x, bounds.y, bounds.z, bounds.x + bounds.w, bounds.y + bounds.h, bounds.z);
+	edge1 = gfc_edge3d(bounds.x, bounds.y, bounds.z, bounds.x + bounds.w, bounds.y + bounds.h, bounds.z + bounds.d);
 	edge2 = gfc_edge3d(bounds.x + bounds.w, bounds.y, bounds.z, bounds.x, bounds.y + bounds.h, bounds.z);
 
 	if (level_bounds_test(entity_manager.level, bounds)) return 0;

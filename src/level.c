@@ -91,7 +91,7 @@ void level_draw(Level *level)
 		mat2,
 		gfc_vector3d(0, 0 ,0),
 		gfc_vector3d(0, 0, 0),
-		gfc_vector3d(5, 5, 2)
+		gfc_vector3d(1, 1, 1)
 	);
 	model_queue_render(level->sky, mat, GFC_COLOR_BLUE);
 	model_queue_render(level->terrain, mat2, gfc_color8(30, 200, 30, 200));

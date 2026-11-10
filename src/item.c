@@ -92,9 +92,15 @@ Entity *item_spawn(const char *itemName, GFC_Vector3D position)
 	self->model = model;
 	self->position = position;
 	self->bounds = bounds;
-	self->bounds.x = position.x - 0.5 * self->bounds.w * self->scale.x;
-	self->bounds.y = position.y - 0.5 * self->bounds.h * self->scale.y;
-	self->bounds.z = position.z - 0.5 * self->bounds.d * self->scale.z;
+
+	self->bounds.w = self->bounds.w * self->scale.x;
+	self->bounds.h = self->bounds.h * self->scale.y;
+	self->bounds.d = self->bounds.d * self->scale.z;
+
+	self->bounds.x = position.x - 0.5 * self->bounds.w;
+	self->bounds.y = position.y - 0.5 * self->bounds.h;
+	self->bounds.z = position.z - 0.5 * self->bounds.d;
+
 	self->color = color;
 
 	self->think = item_think;
@@ -144,9 +150,9 @@ static int item_update(Entity *self)
 	gfc_vector3d_add(self->position, self->position, self->velocity);
 
 	// update bounding box
-	self->bounds.x = self->position.x - 0.5 * self->bounds.w * self->scale.x;
-	self->bounds.y = self->position.y - 0.5 * self->bounds.h * self->scale.y;
-	self->bounds.z = self->position.z - 0.5 * self->bounds.d * self->scale.z;
+	self->bounds.x = self->position.x - 0.5 * self->bounds.w;
+	self->bounds.y = self->position.y - 0.5 * self->bounds.h;
+	self->bounds.z = self->position.z - 0.5 * self->bounds.d;
 
 	return 1;
 }

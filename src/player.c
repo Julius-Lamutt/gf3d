@@ -94,10 +94,15 @@ Entity *player_spawn(GFC_Vector3D position)
 	self->position = position;
 	self->velocity = gfc_vector3d(0, 0, 0);
 	self->rotation = gfc_vector3d(0, 0, 135);
+	self->scale = gfc_vector3d(0.5, 0.5, 0.5);
 
-	self->bounds.x = position.x - 0.5 * self->bounds.w * self->scale.x;
-	self->bounds.y = position.y - 0.5 * self->bounds.h * self->scale.y;
-	self->bounds.z = position.z - 0.5 * self->bounds.d * self->scale.z;
+	self->bounds.w = self->bounds.w * self->scale.x;
+	self->bounds.h = self->bounds.h * self->scale.y;
+	self->bounds.d = self->bounds.d * self->scale.z;
+
+	self->bounds.x = position.x - 0.5 * self->bounds.w;
+	self->bounds.y = position.y - 0.5 * self->bounds.h;
+	self->bounds.z = position.z - 0.5 * self->bounds.d;
 
 	self->think = player_think;
 	self->update = player_update;
@@ -165,9 +170,9 @@ static int player_update(Entity *self)
 	gfc_vector3d_add(self->position, self->position, self->velocity);
 
 	// update bounding box
-	self->bounds.x = self->position.x - 0.5 * self->bounds.w * self->scale.x;
-	self->bounds.y = self->position.y - 0.5 * self->bounds.h * self->scale.y;
-	self->bounds.z = self->position.z - 0.5 * self->bounds.d * self->scale.z;
+	self->bounds.x = self->position.x - 0.5 * self->bounds.w;
+	self->bounds.y = self->position.y - 0.5 * self->bounds.h;
+	self->bounds.z = self->position.z - 0.5 * self->bounds.d;
 	//slog("x: %f, y: %f, z: %f", self->bounds.x, self->bounds.y, self->bounds.z);
 
 	// update camera
