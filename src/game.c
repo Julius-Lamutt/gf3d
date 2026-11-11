@@ -21,6 +21,10 @@
 #include "gf3d_swapchain.h"
 #include "gf3d_mesh.h"
 
+#include "windows.h"
+#include "main_menu.h"
+#include "hud_menu.h"
+
 #include "items.h"
 #include "model.h"
 #include "draw_2d.h"
@@ -48,7 +52,7 @@ void exitGame()
 int main(int argc,char *argv[])
 {
     // local variables
-    Sprite *bg;
+    Window *mainMenu;
     Entity *player, *health, *armor, *damage, *speed, *heat;
     Level *level;
     GFC_Rect rect = gfc_rect(10, 10, 50, 50);
@@ -73,14 +77,17 @@ int main(int argc,char *argv[])
     // resource manager init
     draw_2d_init();
     draw_3d_init();
+    window_system_init(64);
     entity_system_init(1024);
     items_init("defs/items.json");
     
     // game init
     srand(SDL_GetTicks());
     slog_sync();
-    bg = gf2d_sprite_load_image("images/bg_flat.png");
     gf2d_mouse_load("actors/mouse.actor");
+
+    // menu
+    mainMenu = main_menu();
 
     // player entity
     player = player_spawn(gfc_vector3d(5, 5, 10));
@@ -100,6 +107,7 @@ int main(int argc,char *argv[])
     while(!_done)
     {
         // UI updates
+        window_system_update();
         gfc_input_update();
         gf2d_mouse_update();
         gf2d_font_update();
@@ -116,7 +124,7 @@ int main(int argc,char *argv[])
             entity_system_draw();
 
             //2D draws
-            draw_2d_rect(rect, GFC_COLOR_RED);
+            window_system_draw();
             gf2d_font_draw_line_tag("ALT+F4 to exit", FT_H1, GFC_COLOR_WHITE, gfc_vector2d(10,10));
             gf2d_mouse_draw();
 

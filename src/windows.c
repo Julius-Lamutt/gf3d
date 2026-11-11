@@ -204,7 +204,11 @@ Window *window_load(const char *filename)
 	}
 
 	win = window_new();
-	if (!win) return NULL;
+	if (!win)
+	{
+		sj_free(file);
+		return NULL;
+	}
 
 	name = sj_object_get_value_as_string(window, "name"); 
 	if (!name)

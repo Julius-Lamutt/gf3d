@@ -90,7 +90,7 @@ void element_label_draw(LabelElement *label, GFC_Rect bounds)
 	if (!label) return;
 	if (label->wrap)
 	{
-		gf2d_font_draw_text_wrap(label->text, bounds, label->color, label->style);
+		gf2d_font_draw_text_wrap(label->text, bounds, label->color, &label->style);
 	}
 	else
 	{

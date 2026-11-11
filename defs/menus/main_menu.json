@@ -6,9 +6,9 @@
         "name": "label_demo",
         "type":  "label",
         "text": "DEMO",
-        "style": "large",
+        "style": "h1",
         "text_color": [20, 20, 20, 250],
-        "wrap":  "1",
+        "wrap":  "0",
         "can_focus": "0",
         "bounds": [510, 80, 200, 20],
         "color":  [0, 0, 0, 0]
@@ -19,7 +19,7 @@
         "label": 
           {
             "text": "New Game",
-            "style": "medium",
+            "style": "normal",
             "text_color": [20, 20, 20, 250],
             "wrap":  0
         },
@@ -35,7 +35,7 @@
         "label": 
           {
             "text": "Coming Soon",
-            "style": "medium",
+            "style": "normal",
             "text_color": [20, 20, 20, 250],
             "wrap":  0
         },
@@ -51,7 +51,7 @@
         "label": 
           {
             "text": "Coming Soon",
-            "style": "medium",
+            "style": "normal",
             "text_color": [20, 20, 20, 250],
             "wrap":  0
         },
@@ -67,7 +67,7 @@
         "label": 
           {
             "text": "Quit",
-            "style": "medium",
+            "style": "normal",
             "text_color": [20, 20, 20, 250],
             "wrap":  0
         },
