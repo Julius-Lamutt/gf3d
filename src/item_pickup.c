@@ -4,24 +4,24 @@
 #include "gfc_config_def.h"
 #include "gfc_text.h"
 
-#include "item.h"
+#include "item_pickup.h"
 
 typedef struct
 {
 	Uint8	_inuse;		/**<just a placeholder for now*/
-} ItemData;
+} ItemPickupData;
 
-static int item_think(Entity *self);
-static int item_update(Entity *self);
-static int item_draw(Entity *self);
-static void item_free(Entity *self);
+static int item_pickup_think(Entity *self);
+static int item_pickup_update(Entity *self);
+static int item_pickup_draw(Entity *self);
+static void item_pickup_free(Entity *self);
 
-Entity *item_spawn(const char *itemName, GFC_Vector3D position)
+Entity *item_pickup_spawn(const char *itemName, GFC_Vector3D position)
 {
 	int i, c;
 	SJson *json, *itemList, *item;
 	Entity *self;
-	ItemData *data;
+	ItemPickupData *data;
 	Model *model;
 	GFC_Box bounds;
 	GFC_Color color;
@@ -29,16 +29,16 @@ Entity *item_spawn(const char *itemName, GFC_Vector3D position)
 
 	if (!itemName) return NULL;
 
-	json = sj_load("defs/items.json");
+	json = sj_load("defs/entities/item_pickups.json");
 	if (!json)
 	{
 		slog("failed to load item file");
 		return NULL;
 	}
-	itemList = sj_object_get_value(json, "items");
+	itemList = sj_object_get_value(json, "item_pickup");
 	if (!itemList)
 	{
-		slog("cannot load item names from item file");
+		slog("cannot load item pickup names from item pickup file");
 		sj_free(json);
 		return NULL;
 	}
@@ -52,28 +52,28 @@ Entity *item_spawn(const char *itemName, GFC_Vector3D position)
 	}
 	if (i == c)
 	{
-		slog("failed to find item '%s' in item file", itemName);
+		slog("failed to find item '%s' in item pickup file", itemName);
 		sj_free(json);
 		return NULL;
 	}
 	str2 = sj_object_get_string(item, "model");
 	if (!str2)
 	{
-		slog("failed to locate item model for item '%s'", itemName);
+		slog("failed to locate item model for item pickup '%s'", itemName);
 		sj_free(json);
 		return NULL;
 	}
 	model = model_load(str2);
 	if (!model)
 	{
-		slog("failed to load player model for item '%s'", itemName);
+		slog("failed to load player model for item pickup '%s'", itemName);
 		sj_free(json);
 		return NULL;
 	}
 	bounds = gfc_box_from_config(sj_object_get_value(item, "bounds"));
 	if (bounds.w == 0 && bounds.h == 0 && bounds.d == 0)
 	{
-		slog("failed to load player bounds for item '%s'", itemName);
+		slog("failed to load player bounds for item pickup '%s'", itemName);
 		sj_free(json);
 		return NULL;
 	}
@@ -82,7 +82,7 @@ Entity *item_spawn(const char *itemName, GFC_Vector3D position)
 	self = entity_new();
 	if (!self)
 	{
-		slog("failed to allocate memory for item entity");
+		slog("failed to allocate memory for item pickup entity");
 		sj_free(json);
 		return NULL;
 	}
@@ -103,12 +103,12 @@ Entity *item_spawn(const char *itemName, GFC_Vector3D position)
 
 	self->color = color;
 
-	self->think = item_think;
-	self->update = item_update;
-	self->draw = item_draw;
-	self->free = item_free;
+	self->think = item_pickup_think;
+	self->update = item_pickup_update;
+	self->draw = item_pickup_draw;
+	self->free = item_pickup_free;
 
-	self->data = gfc_allocate_array(sizeof(ItemData), 1);
+	self->data = gfc_allocate_array(sizeof(ItemPickupData), 1);
 	if (self->data)
 	{
 		data = self->data;
@@ -117,17 +117,17 @@ Entity *item_spawn(const char *itemName, GFC_Vector3D position)
 	return self;
 }
 
-static void item_free(Entity *self)
+static void item_pickup_free(Entity *self)
 {
-	ItemData *data;
+	ItemPickupData *data;
 
 	if ((!self) || (!self->data)) return;
-	data = (ItemData*)self->data;
+	data = (ItemPickupData*)self->data;
 	if (data) free(data);
 	self->data = NULL;
 }
 
-static int item_think(Entity *self)
+static int item_pickup_think(Entity *self)
 {
 	GFC_Vector3D move = {0};
 
@@ -142,7 +142,7 @@ static int item_think(Entity *self)
 	return 1;
 }
 
-static int item_update(Entity *self)
+static int item_pickup_update(Entity *self)
 {
 	if (!self) return 0;
 
@@ -157,7 +157,7 @@ static int item_update(Entity *self)
 	return 1;
 }
 
-static int item_draw(Entity *self)
+static int item_pickup_draw(Entity *self)
 {
 	if (!self) return 0;
 

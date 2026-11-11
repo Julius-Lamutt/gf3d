@@ -189,7 +189,13 @@
     <ClInclude Include="..\include\draw_3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\item.h">
+    <ClInclude Include="..\include\inventory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\item_pickup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\items.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -362,7 +368,13 @@
     <ClCompile Include="..\src\draw_3d.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\item.c">
+    <ClCompile Include="..\src\inventory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\item_pickup.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\items.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

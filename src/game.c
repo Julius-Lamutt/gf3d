@@ -21,12 +21,13 @@
 #include "gf3d_swapchain.h"
 #include "gf3d_mesh.h"
 
+#include "items.h"
 #include "model.h"
 #include "draw_3d.h"
 #include "level.h"
 #include "entity.h"
 #include "player.h"
-#include "item.h"
+#include "item_pickup.h"
 
 extern int __DEBUG;
 extern int __COLLISION;
@@ -67,11 +68,10 @@ int main(int argc,char *argv[])
     gf2d_font_init("config/font.cfg");
     gf2d_actor_init(1000);
 
-    // draw_3d init
+    // resource manager init
     draw_3d_init();
-
-    // entity init
     entity_system_init(1024);
+    items_init("defs/items.json");
     
     // game init
     srand(SDL_GetTicks());
@@ -83,7 +83,7 @@ int main(int argc,char *argv[])
     player = player_spawn(gfc_vector3d(5, 5, 10));
 
     // health item
-    health = item_spawn("item_health", gfc_vector3d(0, 5, 10));
+    health = item_pickup_spawn("health", gfc_vector3d(0, 5, 10));
 
     // level
     level = level_load("levels/test_level.json");

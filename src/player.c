@@ -6,11 +6,14 @@
 
 #include "gf3d_vgraphics.h"
 
+#include "inventory.h"
 #include "level.h"
 #include "player.h"
 
 typedef struct
 {
+	Sint16			health;
+	Inventory		*inventory;
 	float			cameraFollowDistance;
 	GFC_Vector2D	cameraRotation;
 } PlayerData;
@@ -20,7 +23,10 @@ static int player_think(Entity *self);
 static int player_update(Entity *self);
 static int player_draw(Entity *self);
 static void player_free(Entity *self);
+static void player_handle_inputs(Entity *self);
 static void player_handle_touches(Entity *self);
+
+static Uint8 damageBoost;
 
 Entity *player_load(const char *filename)
 {
@@ -113,7 +119,8 @@ Entity *player_spawn(GFC_Vector3D position)
 	if (self->data)
 	{
 		data = self->data;
-		data->cameraFollowDistance = 20;
+		data->health = 1000;
+		data->cameraFollowDistance = 15;
 		data->cameraRotation = gfc_vector2d(0, 0);
 	}
 	return self;
@@ -137,13 +144,8 @@ static int player_think(Entity *self)
 	if ((!self) || (!self->data)) return 0;
 	data = (PlayerData*) self->data;
 
-	// check movement input
-	if (gfc_input_command_down("item_up")) move.y += 1;
-	if (gfc_input_command_down("item_down")) move.y -= 1;
-	if (gfc_input_command_down("item_left")) move.x -= 1;
-	if (gfc_input_command_down("item_right")) move.x += 1;
-
-	self->velocity = move;
+	// handle player inputs
+	player_handle_inputs(self);
 
 	// gravity
 	self->velocity.z = -0.125;
@@ -176,7 +178,7 @@ static int player_update(Entity *self)
 	//slog("x: %f, y: %f, z: %f", self->bounds.x, self->bounds.y, self->bounds.z);
 
 	// update camera
-	offset = gfc_vector3d(0, -20, 0);
+	offset = gfc_vector3d(0, -data->cameraFollowDistance, 0);
 	gfc_vector3d_add(offset, offset, self->position);
 	view = gf3d_vgraphics_get_view_matrix();
 	gfc_matrix4_view(
@@ -194,6 +196,24 @@ static int player_draw(Entity *self)
 	if (!self) return 0;
 
 	return 0;
+}
+
+static void player_handle_inputs(Entity *self)
+{
+	PlayerData *data;
+	GFC_Vector3D move = {0};
+
+	if ((!self) || (!self->data)) return;
+	data = (PlayerData*) self->data;
+
+	// check movement input
+	if (gfc_input_command_down("item_up")) move.y += 1;
+	if (gfc_input_command_down("item_down")) move.y -= 1;
+	if (gfc_input_command_down("item_left")) move.x -= 1;
+	if (gfc_input_command_down("item_right")) move.x += 1;
+	gfc_vector3d_normalize(&move);
+	gfc_vector3d_scale(move, move, 1);
+	self->velocity = move;
 }
 
 static void player_handle_touches(Entity *self)

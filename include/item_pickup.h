@@ -1,5 +1,5 @@
-#ifndef __ITEM_H__
-#define __ITEM_H__
+#ifndef __ITEM_PICKUP_H__
+#define __ITEM_PICKUP_H__
 
 #include "gfc_vector.h"
 
@@ -9,6 +9,6 @@
 * @brief spawn an item entity
 * @param position the position of the new item
 */
-Entity *item_spawn(const char *itemName, GFC_Vector3D position);
+Entity *item_pickup_spawn(const char *itemName, GFC_Vector3D position);
 
 #endif

@@ -66,7 +66,9 @@
     <ClInclude Include="..\include\gf3d_validation.h" />
     <ClInclude Include="..\include\gf3d_vgraphics.h" />
     <ClInclude Include="..\include\gf3d_vqueues.h" />
-    <ClInclude Include="..\include\item.h" />
+    <ClInclude Include="..\include\inventory.h" />
+    <ClInclude Include="..\include\items.h" />
+    <ClInclude Include="..\include\item_pickup.h" />
     <ClInclude Include="..\include\level.h" />
     <ClInclude Include="..\include\model.h" />
     <ClInclude Include="..\include\player.h" />
@@ -125,7 +127,9 @@
     <ClCompile Include="..\src\gf3d_validation.c" />
     <ClCompile Include="..\src\gf3d_vgraphics.c" />
     <ClCompile Include="..\src\gf3d_vqueues.c" />
-    <ClCompile Include="..\src\item.c" />
+    <ClCompile Include="..\src\inventory.c" />
+    <ClCompile Include="..\src\items.c" />
+    <ClCompile Include="..\src\item_pickup.c" />
     <ClCompile Include="..\src\level.c" />
     <ClCompile Include="..\src\model.c" />
     <ClCompile Include="..\src\player.c" />
