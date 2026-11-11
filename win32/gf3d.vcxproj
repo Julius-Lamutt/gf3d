@@ -41,7 +41,12 @@
     <ClInclude Include="..\gfc\simple_json\include\simple_json_types.h" />
     <ClInclude Include="..\gfc\simple_json\include\simple_json_value.h" />
     <ClInclude Include="..\gfc\simple_logger\include\simple_logger.h" />
+    <ClInclude Include="..\include\draw_2d.h" />
     <ClInclude Include="..\include\draw_3d.h" />
+    <ClInclude Include="..\include\elements.h" />
+    <ClInclude Include="..\include\element_actor.h" />
+    <ClInclude Include="..\include\element_button.h" />
+    <ClInclude Include="..\include\element_label.h" />
     <ClInclude Include="..\include\entity.h" />
     <ClInclude Include="..\include\gf2d_actor.h" />
     <ClInclude Include="..\include\gf2d_camera.h" />
@@ -72,6 +77,7 @@
     <ClInclude Include="..\include\level.h" />
     <ClInclude Include="..\include\model.h" />
     <ClInclude Include="..\include\player.h" />
+    <ClInclude Include="..\include\windows.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\gfc\simple_json\src\simple_json.c" />
@@ -102,7 +108,12 @@
     <ClCompile Include="..\gfc\src\gfc_types.c" />
     <ClCompile Include="..\gfc\src\gfc_vector.c" />
     <ClCompile Include="..\gfc\src\miniz.c" />
+    <ClCompile Include="..\src\draw_2d.c" />
     <ClCompile Include="..\src\draw_3d.c" />
+    <ClCompile Include="..\src\elements.c" />
+    <ClCompile Include="..\src\element_actor.c" />
+    <ClCompile Include="..\src\element_button.c" />
+    <ClCompile Include="..\src\element_label.c" />
     <ClCompile Include="..\src\entity.c" />
     <ClCompile Include="..\src\game.c" />
     <ClCompile Include="..\src\gf2d_actor.c" />
@@ -133,6 +144,7 @@
     <ClCompile Include="..\src\level.c" />
     <ClCompile Include="..\src\model.c" />
     <ClCompile Include="..\src\player.c" />
+    <ClCompile Include="..\src\windows.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F2888FF8-08AA-47C4-B321-B8090877719F}</ProjectGuid>
