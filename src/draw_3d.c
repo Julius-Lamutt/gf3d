@@ -14,14 +14,6 @@ Draw3dData draw_3d_data = {0};
 
 void draw_3d_close();
 
-void draw_3d_close()
-{
-	if (draw_3d_data.cube) model_free(draw_3d_data.cube);
-	if (draw_3d_data.cubeOutline) model_free(draw_3d_data.cubeOutline);
-	if (draw_3d_data.sphere) model_free(draw_3d_data.sphere);
-	if (draw_3d_data.sphereOutline) model_free(draw_3d_data.sphereOutline);
-}
-
 void draw_3d_init()
 {
 	draw_3d_data.cube = model_load("models/cube.model");
@@ -29,6 +21,14 @@ void draw_3d_init()
 	draw_3d_data.sphere = model_load("models/sphere.model");
 	draw_3d_data.sphereOutline = model_load("models/sphere_outline.model");
 	atexit(draw_3d_close);
+}
+
+void draw_3d_close()
+{
+	if (draw_3d_data.cube) model_free(draw_3d_data.cube);
+	if (draw_3d_data.cubeOutline) model_free(draw_3d_data.cubeOutline);
+	if (draw_3d_data.sphere) model_free(draw_3d_data.sphere);
+	if (draw_3d_data.sphereOutline) model_free(draw_3d_data.sphereOutline);
 }
 
 void draw_3d_cube(GFC_Box cube, GFC_Color color)

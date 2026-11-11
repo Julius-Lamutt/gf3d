@@ -23,6 +23,7 @@
 
 #include "items.h"
 #include "model.h"
+#include "draw_2d.h"
 #include "draw_3d.h"
 #include "level.h"
 #include "entity.h"
@@ -50,6 +51,7 @@ int main(int argc,char *argv[])
     Sprite *bg;
     Entity *player, *health, *armor, *damage, *speed, *heat;
     Level *level;
+    GFC_Rect rect = gfc_rect(10, 10, 50, 50);
 
     // initializtion    
     parse_arguments(argc,argv);
@@ -69,6 +71,7 @@ int main(int argc,char *argv[])
     gf2d_actor_init(1000);
 
     // resource manager init
+    draw_2d_init();
     draw_3d_init();
     entity_system_init(1024);
     items_init("defs/items.json");
@@ -113,6 +116,7 @@ int main(int argc,char *argv[])
             entity_system_draw();
 
             //2D draws
+            draw_2d_rect(rect, GFC_COLOR_RED);
             gf2d_font_draw_line_tag("ALT+F4 to exit", FT_H1, GFC_COLOR_WHITE, gfc_vector2d(10,10));
             gf2d_mouse_draw();
 

@@ -4,6 +4,11 @@
 #include "gfc_shape.h"
 
 /**
+* @brief initialize the 2d draw system for primtives
+*/
+void draw_2d_init();
+
+/**
 * @brief render a rectangle using a gfc_rect
 * @param rect the gfc_rect to render
 * @param color rect color

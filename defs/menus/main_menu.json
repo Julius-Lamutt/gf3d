@@ -1,0 +1,88 @@
+{
+  "window": {
+    "name": "main_menu",
+    "elements": [
+      {
+        "name": "label_demo",
+        "type":  "label",
+        "text": "DEMO",
+        "style": "large",
+        "text_color": [20, 20, 20, 250],
+        "wrap":  "1",
+        "can_focus": "0",
+        "bounds": [510, 80, 200, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "button_new_game",
+        "type": "button",
+        "label": 
+          {
+            "text": "New Game",
+            "style": "medium",
+            "text_color": [20, 20, 20, 250],
+            "wrap":  0
+        },
+        "high_color": [220, 220, 220, 150],
+        "press_color": [220, 100, 100, 150],
+        "can_focus": "1",
+        "bounds": [690, 300, 290, 50],
+        "color": [220, 220, 220, 100]
+      },
+      {
+        "name": "button_load_game",
+        "type": "button",
+        "label": 
+          {
+            "text": "Coming Soon",
+            "style": "medium",
+            "text_color": [20, 20, 20, 250],
+            "wrap":  0
+        },
+        "high_color": [220, 220, 220, 150],
+        "press_color": [220, 100, 100, 150],
+        "can_focus": "0",
+        "bounds": [690, 385, 290, 50],
+        "color": [220, 220, 220, 100]
+      },
+      {
+        "name": "button_editor",
+        "type": "button",
+        "label": 
+          {
+            "text": "Coming Soon",
+            "style": "medium",
+            "text_color": [20, 20, 20, 250],
+            "wrap":  0
+        },
+        "high_color": [220, 220, 220, 150],
+        "press_color": [220, 100, 100, 150],
+        "can_focus": "0",
+        "bounds": [690, 470, 290, 50],
+        "color": [220, 220, 220, 100]
+      },
+      {
+        "name": "button_quit",
+        "type": "button",
+        "label": 
+          {
+            "text": "Quit",
+            "style": "medium",
+            "text_color": [20, 20, 20, 250],
+            "wrap":  0
+        },
+        "high_color": [220, 220, 220, 150],
+        "press_color": [220, 100, 100, 150],
+        "can_focus": "1",
+        "bounds": [690, 550, 290, 50],
+        "color": [220, 220, 220, 100]
+      }
+    ],
+    "background": ["images/UI/window_background.png", "256", "265"],
+    "border":  ["images/default_border.png", "400", "400"],
+    "size":  [120, 0, 960, 720],
+    "canvas":  [110, 110, 380, 380],
+    "bg_color":  [250, 20, 20, 250],
+    "border_color": [50, 50, 50, 0]
+  }
+}
