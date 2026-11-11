@@ -13,7 +13,7 @@
 typedef struct
 {
 	Sint16			health;
-	Inventory		*inventory;
+	Inventory		inventory;
 	float			cameraFollowDistance;
 	GFC_Vector2D	cameraRotation;
 } PlayerData;
@@ -119,6 +119,8 @@ Entity *player_spawn(GFC_Vector3D position)
 	if (self->data)
 	{
 		data = self->data;
+		inventory_init(&data->inventory);
+		inventory_load_data(&data->inventory, "defs/inventory_data.json");
 		data->health = 1000;
 		data->cameraFollowDistance = 15;
 		data->cameraRotation = gfc_vector2d(0, 0);
@@ -132,7 +134,15 @@ static void player_free(Entity *self)
 
 	if ((!self) || (!self->data)) return;
 	data = (PlayerData*)self->data;
-	if (data) free(data);
+	if (data)
+	{
+		if (&data->inventory)
+		{
+			inventory_purge_data("defs/inventory_data.json");
+			inventory_close(&data->inventory);
+		}
+		free(data);
+	}
 	self->data = NULL;
 }
 
@@ -239,9 +249,9 @@ static void player_handle_touches(Entity *self)
 		}
 		else if (other->layer == EL_ITEM)
 		{
-			if (gfc_strlcmp(other->name, "item_health") == 0)
+			if (gfc_strlcmp(other->name, "health") == 0)
 			{
-				entity_free(other);
+				if (inventory_add_item(&data->inventory, "health")) entity_free(other);
 			}
 		}
 		else if (other->layer == EL_PROJECTILE)

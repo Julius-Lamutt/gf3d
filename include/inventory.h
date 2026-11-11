@@ -5,16 +5,6 @@
 
 #include "items.h"
 
-typedef enum
-{
-	II_ITEM1,
-	II_ITEM2,
-	II_ITEM3,
-	II_ITEM4,
-	II_ITEM5,
-	II_ITEMMAX
-} InventoryIndinces;
-
 typedef struct
 {
 	GFC_List *itemList;
@@ -44,8 +34,9 @@ Item *inventory_get_item_by_name(Inventory *inventory, const char *name);
 * @brief add an item to the inventory
 * @param inventory: the inventory where the item will be added
 * @param name: the name of the item to be added
+* @returns 1 if item was successfully added, 0 otherwise
 */
-void inventory_add_item(Inventory *inventory, const char *name);
+Uint8 inventory_add_item(Inventory *inventory, const char *name);
 
 /*
 * @brief remove an item from the inventory

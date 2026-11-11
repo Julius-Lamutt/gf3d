@@ -5,12 +5,14 @@
 void inventory_init(Inventory *inventory)
 {
 	if (!inventory) return;
+
 	inventory->itemList = gfc_list_new();
 }
 
 void inventory_close(Inventory *inventory)
 {
 	if (!inventory) return;
+
 	gfc_list_foreach(inventory->itemList, (gfc_work_func*)item_free);
 	gfc_list_delete(inventory->itemList);
 	inventory->itemList = NULL;
@@ -34,24 +36,26 @@ Item *inventory_get_item_by_name(Inventory *inventory, const char *name)
 	return NULL;
 }
 
-void inventory_add_item(Inventory *inventory, const char *name)
+Uint8 inventory_add_item(Inventory *inventory, const char *name)
 {
 	Item *item;
 
-	if ((!inventory) || (!name)) return;
+	if ((!inventory) || (!name)) return 0;
 
 	// check if item is already in inventory
 	item = inventory_get_item_by_name(inventory, name);
 	if (item)
 	{
+		if (item->count >= item->max) return 0; 
 		item->count++;
-		return;
+		return 1;
 	}
 
 	// item not found, create it
 	item = item_new(name);
-	if (!item) return;
+	if (!item) return 0;
 	gfc_list_append(inventory->itemList, item);
+	return 1;
 }
 
 void inventory_remove_item(Inventory *inventory, const char *name)

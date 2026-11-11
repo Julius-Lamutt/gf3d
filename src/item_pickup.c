@@ -6,11 +6,6 @@
 
 #include "item_pickup.h"
 
-typedef struct
-{
-	Uint8	_inuse;		/**<just a placeholder for now*/
-} ItemPickupData;
-
 static int item_pickup_think(Entity *self);
 static int item_pickup_update(Entity *self);
 static int item_pickup_draw(Entity *self);
@@ -21,7 +16,6 @@ Entity *item_pickup_spawn(const char *itemName, GFC_Vector3D position)
 	int i, c;
 	SJson *json, *itemList, *item;
 	Entity *self;
-	ItemPickupData *data;
 	Model *model;
 	GFC_Box bounds;
 	GFC_Color color;
@@ -108,23 +102,13 @@ Entity *item_pickup_spawn(const char *itemName, GFC_Vector3D position)
 	self->draw = item_pickup_draw;
 	self->free = item_pickup_free;
 
-	self->data = gfc_allocate_array(sizeof(ItemPickupData), 1);
-	if (self->data)
-	{
-		data = self->data;
-		data->_inuse = 1;
-	}
 	return self;
 }
 
 static void item_pickup_free(Entity *self)
 {
-	ItemPickupData *data;
+	if (!self) return;
 
-	if ((!self) || (!self->data)) return;
-	data = (ItemPickupData*)self->data;
-	if (data) free(data);
-	self->data = NULL;
 }
 
 static int item_pickup_think(Entity *self)
@@ -134,7 +118,7 @@ static int item_pickup_think(Entity *self)
 	if (!self) return 0;
 
 	// gravity
-	//self->velocity.z = -0.125;
+	self->velocity.z = -0.125;
 
 	// collision detection
 	if (!entity_move_check(self)) self->velocity = gfc_vector3d(0, 0, 0);
