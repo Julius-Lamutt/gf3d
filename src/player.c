@@ -13,7 +13,13 @@
 typedef struct
 {
 	Sint16			health;
+	Sint16			armor;
+	Sint16			heat;
 	Inventory		inventory;
+	Uint8			damage_boost;
+	Uint32			damage_boost_start;
+	Uint8			speed_boost;
+	Uint32			speed_boost_start;
 	float			cameraFollowDistance;
 	GFC_Vector2D	cameraRotation;
 } PlayerData;
@@ -121,7 +127,9 @@ Entity *player_spawn(GFC_Vector3D position)
 		data = self->data;
 		inventory_init(&data->inventory);
 		inventory_load_data(&data->inventory, "defs/inventory_data.json");
-		data->health = 1000;
+		data->health = 100;
+		data->armor = 0;
+		data->heat = 0;
 		data->cameraFollowDistance = 15;
 		data->cameraRotation = gfc_vector2d(0, 0);
 	}
@@ -224,6 +232,28 @@ static void player_handle_inputs(Entity *self)
 	gfc_vector3d_normalize(&move);
 	gfc_vector3d_scale(move, move, 1);
 	self->velocity = move;
+
+	// check item use input
+	if (gfc_input_command_down("health"))
+	{
+		inventory_remove_item(&data->inventory, "health");
+	}
+	if (gfc_input_command_down("armor"))
+	{
+		inventory_remove_item(&data->inventory, "armor");
+	}
+	if (gfc_input_command_down("damage"))
+	{
+		inventory_remove_item(&data->inventory, "damage");
+	}
+	if (gfc_input_command_down("speed"))
+	{
+		inventory_remove_item(&data->inventory, "speed");
+	}
+	if (gfc_input_command_down("heat"))
+	{
+		inventory_remove_item(&data->inventory, "heat");
+	}
 }
 
 static void player_handle_touches(Entity *self)
@@ -252,6 +282,22 @@ static void player_handle_touches(Entity *self)
 			if (gfc_strlcmp(other->name, "health") == 0)
 			{
 				if (inventory_add_item(&data->inventory, "health")) entity_free(other);
+			}
+			else if (gfc_strlcmp(other->name, "armor") == 0)
+			{
+				if (inventory_add_item(&data->inventory, "armor")) entity_free(other);
+			}
+			else if (gfc_strlcmp(other->name, "damage") == 0)
+			{
+				if (inventory_add_item(&data->inventory, "damage")) entity_free(other);
+			}
+			else if (gfc_strlcmp(other->name, "speed") == 0)
+			{
+				if (inventory_add_item(&data->inventory, "speed")) entity_free(other);
+			}
+			else if (gfc_strlcmp(other->name, "heat") == 0)
+			{
+				if (inventory_add_item(&data->inventory, "heat")) entity_free(other);
 			}
 		}
 		else if (other->layer == EL_PROJECTILE)

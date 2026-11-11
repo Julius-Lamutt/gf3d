@@ -65,9 +65,16 @@ void inventory_remove_item(Inventory *inventory, const char *name)
 	if ((!inventory) || (!name)) return;
 
 	item = inventory_get_item_by_name(inventory, name);
+
+	if (item) item->count--;
+
 	if (item && item->count == 0)
 	{
-		if (gfc_list_delete_data(inventory->itemList, item)) slog("failed delete of item %s", item);
+		if (gfc_list_delete_data(inventory->itemList, item))
+		{
+			slog("failed delete of item %s", item);
+			return;
+		}
 		item_free(item);
 	}
 	return;

@@ -48,7 +48,7 @@ int main(int argc,char *argv[])
 {
     // local variables
     Sprite *bg;
-    Entity *player, *health;
+    Entity *player, *health, *armor, *damage, *speed, *heat;
     Level *level;
 
     // initializtion    
@@ -83,7 +83,11 @@ int main(int argc,char *argv[])
     player = player_spawn(gfc_vector3d(5, 5, 10));
 
     // health item
-    health = item_pickup_spawn("health", gfc_vector3d(0, 5, 10));
+    health = item_pickup_spawn("health", gfc_vector3d(-12, 10, 10));
+    armor = item_pickup_spawn("armor", gfc_vector3d(-6, 10, 10));
+    damage = item_pickup_spawn("damage", gfc_vector3d(0, 10, 10));
+    speed = item_pickup_spawn("speed", gfc_vector3d(6, 10, 10));
+    heat = item_pickup_spawn("heat", gfc_vector3d(12, 10, 10));
 
     // level
     level = level_load("levels/test_level.json");

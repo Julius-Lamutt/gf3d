@@ -5,7 +5,31 @@
       "name": "health",
       "model": "models/cube.model",
       "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
-      "color": [0, 255, 0, 255]
+      "color": [215, 215, 215, 255]
+    },
+    {
+      "name": "armor",
+      "model": "models/cube.model",
+      "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
+      "color": [100, 100, 100, 255]
+    },
+    {
+      "name": "damage",
+      "model": "models/cube.model",
+      "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
+      "color": [20, 215, 20, 255]
+    },
+    {
+      "name": "speed",
+      "model": "models/cube.model",
+      "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
+      "color": [215, 215, 20, 255]
+    },
+    {
+      "name": "heat",
+      "model": "models/cube.model",
+      "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
+      "color": [20, 20, 215, 255]
     }
   ]
 }
