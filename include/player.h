@@ -16,4 +16,10 @@ Entity *player_spawn(GFC_Vector3D position);
 */
 void player_damage(Entity *self, Uint32 damage);
 
+/*
+* @breif prevent the player from moving for a short time
+* @param self the player to freeze
+*/
+void player_freeze(Entity *self);
+
 #endif

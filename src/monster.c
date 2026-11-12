@@ -285,6 +285,7 @@ static void monster_punch(Entity *self)
 	sound = gfc_sound_load("defs/audio/punch.mp3", 1, 1);
 	gfc_sound_play(sound, 0, 30, -1);
 	gfc_sound_free(sound);
+
 	ai_damage_player(data->damage);
 }
 
@@ -303,6 +304,8 @@ static void monster_grab(Entity *self)
 	sound = gfc_sound_load("defs/audio/grab.mp3", 1, 1);
 	gfc_sound_play(sound, 0, 100, -1);
 	gfc_sound_free(sound);
+
+	ai_freeze_player();
 }
 
 static void monster_shoot(Entity *self)
@@ -345,7 +348,7 @@ static void monster_die(Entity *self)
 	GFC_Sound *sound;
 
 	if (!self) return;
-	sound = gfc_sound_load("defs/audio/monster_die.wav", 30, 2);
+	sound = gfc_sound_load("defs/audio/monster_die.wav", 1, 1);
 	gfc_sound_play(sound, 0, 30, -1);
 	gfc_sound_free(sound);
 	entity_free(self);

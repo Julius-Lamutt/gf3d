@@ -21,6 +21,8 @@ typedef struct
 	Uint32			damage_boost_start;
 	Uint8			speed_boost;
 	Uint32			speed_boost_start;
+	Uint8			freeze;
+	Uint32			freeze_start;
 	float			cameraFollowDistance;
 	GFC_Vector2D	cameraRotation;
 } PlayerData;
@@ -127,8 +129,8 @@ Entity *player_spawn(GFC_Vector3D position)
 		inventory_init(&data->inventory);
 		inventory_load_data(&data->inventory, "defs/inventory_data.json");
 		data->health = 100;
-		data->armor = 25;
-		data->heat = 25;
+		data->armor = 0;
+		data->heat = 0;
 		data->cameraFollowDistance = 15;
 		data->cameraRotation = gfc_vector2d(0, 0);
 	}
@@ -177,12 +179,23 @@ static int player_think(Entity *self)
 			data->speed_boost = 0;
 		}
 	}
+	// check freeze
+	if (data->freeze)
+	{
+		if (SDL_GetTicks() - data->freeze_start > 750)
+		{
+			data->freeze = 0;
+		}
+	}
 
 	// handle player inputs
 	player_handle_inputs(self);
 
 	// gravity
 	self->velocity.z = -0.125;
+
+	// check freeze
+	if (data->freeze) self->velocity = gfc_vector3d(0, 0, 0);
 
 	// collision detection
 	if (!entity_move_check(self)) self->velocity = gfc_vector3d(0, 0, 0);
@@ -267,7 +280,7 @@ static void player_handle_inputs(Entity *self)
 		if (inventory_get_item_by_name(&data->inventory, "health"))
 		{
 			inventory_remove_item(&data->inventory, "health");
-			data->health += 50;
+			data->health += 75;
 		}
 	}
 	if (gfc_input_command_down("armor"))
@@ -275,7 +288,7 @@ static void player_handle_inputs(Entity *self)
 		if (inventory_get_item_by_name(&data->inventory, "armor"))
 		{
 			inventory_remove_item(&data->inventory, "armor");
-			data->armor += 50;
+			data->armor += 75;
 		}
 	}
 	if (gfc_input_command_down("damage"))
@@ -301,7 +314,7 @@ static void player_handle_inputs(Entity *self)
 		if (inventory_get_item_by_name(&data->inventory, "heat"))
 		{
 			inventory_remove_item(&data->inventory, "heat");
-			data->heat += 50;
+			data->heat += 75;
 		}
 	}
 }
@@ -375,4 +388,17 @@ void player_damage(Entity *self, Uint32 damage)
 		data->health -= (int)(damage/5);
 	}
 	else data->health -= damage;
+}
+
+void player_freeze(Entity *self)
+{
+	PlayerData *data;
+
+	if ((!self) || !(self->data)) return;
+	data = (PlayerData*) self->data;
+
+	if (data->freeze) return;
+
+	data->freeze = 1;
+	data->freeze_start = SDL_GetTicks();
 }

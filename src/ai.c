@@ -114,6 +114,13 @@ void ai_damage_player(Uint16 damage)
 	player_damage(level_ai.player, damage);
 }
 
+void ai_freeze_player()
+{
+	if (!level_ai.player) return;
+
+	player_freeze(level_ai.player);
+}
+
 GFC_Vector3D ai_get_player_pos()
 {
 	if (!level_ai.player) return gfc_vector3d(0, 0, 0);

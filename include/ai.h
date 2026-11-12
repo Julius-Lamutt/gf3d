@@ -65,6 +65,11 @@ void ai_set_player(Entity *player);
 void ai_damage_player(Uint16 damage);
 
 /*
+* @brief stop player movement for a brief period
+*/
+void ai_freeze_player();
+
+/*
 * @brief get the player pos from the ai system
 * @return the player's position, or {0, 0, 0} if player cannot be found
 */
