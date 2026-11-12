@@ -1,0 +1,179 @@
+{
+  "window": {
+    "name":  "hud_menu",
+    "elements":  [
+      {
+        "name": "label_health",
+        "type":  "label",
+        "text": "Health:",
+        "style": "h1",
+        "text_color": [220, 20, 20, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [20, 20, 240, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "label_health_number",
+        "type":  "label",
+        "text": "0",
+        "style": "h2",
+        "text_color": [220, 20, 20, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [150, 23, 240, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "label_armor",
+        "type":  "label",
+        "text": "Armor:",
+        "style": "h1",
+        "text_color": [120, 120, 120, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [20, 60, 240, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "label_armor_number",
+        "type":  "label",
+        "text": "0",
+        "style": "h2",
+        "text_color": [120, 120, 120, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [150, 63, 240, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "label_heat",
+        "type":  "label",
+        "text": "Heat:",
+        "style": "h1",
+        "text_color": [20, 20, 215, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [20, 100, 240, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "label_heat_number",
+        "type":  "label",
+        "text": "0",
+        "style": "h2",
+        "text_color": [20, 20, 215, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [150, 103, 240, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "actor_inv_health",
+        "type": "actor",
+        "image": ["models/primitives/flatwhite.png", "32", "32", "1"],
+        "color_shift": [215, 215, 215, 215],
+        "can_focus": "0",
+        "bounds": [350, 600, 64, 64],
+        "color": [0, 0, 0, 255]
+      },
+      {
+        "name": "label_inv_health",
+        "type":  "label",
+        "text": "0",
+        "style": "normal",
+        "text_color": [200, 200, 200, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [370, 670, 200, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "actor_inv_armor",
+        "type": "actor",
+        "image": ["models/primitives/flatwhite.png", "32", "32", "1"],
+        "color_shift": [100, 100, 100, 100],
+        "can_focus": "0",
+        "bounds": [450, 600, 64, 64],
+        "color": [0, 0, 0, 255]
+      },
+      {
+        "name": "label_inv_armor",
+        "type":  "label",
+        "text": "0",
+        "style": "normal",
+        "text_color": [200, 200, 200, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [470, 670, 200, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "actor_inv_damage",
+        "type": "actor",
+        "image": ["models/primitives/flatwhite.png", "32", "32", "1"],
+        "color_shift": [20, 215, 20, 255],
+        "can_focus": "0",
+        "bounds": [550, 600, 64, 64],
+        "color": [0, 0, 0, 255]
+      },
+      {
+        "name": "label_inv_damage",
+        "type":  "label",
+        "text": "0",
+        "style": "normal",
+        "text_color": [200, 200, 200, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [570, 670, 200, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "actor_inv_speed",
+        "type": "actor",
+        "image": ["models/primitives/flatwhite.png", "32", "32", "1"],
+        "color_shift": [215, 215, 20, 255],
+        "can_focus": "0",
+        "bounds": [650, 600, 64, 64],
+        "color": [0, 0, 0, 255]
+      },
+      {
+        "name": "label_inv_speed",
+        "type":  "label",
+        "text": "0",
+        "style": "normal",
+        "text_color": [200, 200, 200, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [670, 670, 200, 20],
+        "color":  [0, 0, 0, 0]
+      },
+      {
+        "name": "actor_inv_heat",
+        "type": "actor",
+        "image": ["models/primitives/flatwhite.png", "32", "32", "1"],
+        "color_shift": [20, 20, 215, 255],
+        "can_focus": "0",
+        "bounds": [750, 600, 64, 64],
+        "color": [0, 0, 0, 255]
+      },
+      {
+        "name": "label_inv_heat",
+        "type":  "label",
+        "text": "0",
+        "style": "normal",
+        "text_color": [200, 200, 200, 250],
+        "wrap":  "0",
+        "can_focus": "0",
+        "bounds": [770, 670, 64, 64],
+        "color":  [0, 0, 0, 0]
+      }
+    ],
+    "background": ["images/UI/window_background.png", "256", "265"],
+    "border":  ["images/default_border.png", "400", "400"],
+    "size":  [120, 0, 1200, 720],
+    "canvas":  [0, 0, 1200, 720],
+    "bg_color":  [0, 0, 0, 0],
+    "border_color": [0, 0, 0, 0]
+  }
+}

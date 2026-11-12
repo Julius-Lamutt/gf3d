@@ -1,5 +1,6 @@
 #include "simple_logger.h"
 
+#include "hud_menu.h"
 #include "inventory.h"
 
 void inventory_init(Inventory *inventory)
@@ -39,8 +40,11 @@ Item *inventory_get_item_by_name(Inventory *inventory, const char *name)
 Uint8 inventory_add_item(Inventory *inventory, const char *name)
 {
 	Item *item;
+	Window *win;
 
 	if ((!inventory) || (!name)) return 0;
+
+	win = window_find_by_name("hud_menu");
 
 	// check if item is already in inventory
 	item = inventory_get_item_by_name(inventory, name);
@@ -48,6 +52,28 @@ Uint8 inventory_add_item(Inventory *inventory, const char *name)
 	{
 		if (item->count >= item->max) return 0; 
 		item->count++;
+
+		if (gfc_strlcmp(item->name, "health") == 0)
+		{
+			hud_menu_update_inv_health(win, item->count);
+		}
+		else if (gfc_strlcmp(item->name, "armor") == 0)
+		{
+			hud_menu_update_inv_armor(win, item->count);
+		}
+		else if (gfc_strlcmp(item->name, "damage") == 0)
+		{
+			hud_menu_update_inv_damage(win, item->count);
+		}
+		else if (gfc_strlcmp(item->name, "speed") == 0)
+		{
+			hud_menu_update_inv_speed(win, item->count);
+		}
+		else if (gfc_strlcmp(item->name, "heat") == 0)
+		{
+			hud_menu_update_inv_heat(win, item->count);
+		}
+
 		return 1;
 	}
 
@@ -55,18 +81,66 @@ Uint8 inventory_add_item(Inventory *inventory, const char *name)
 	item = item_new(name);
 	if (!item) return 0;
 	gfc_list_append(inventory->itemList, item);
+
+	if (gfc_strlcmp(item->name, "health") == 0)
+	{
+		hud_menu_update_inv_health(win, item->count);
+	}
+	else if (gfc_strlcmp(item->name, "armor") == 0)
+	{
+		hud_menu_update_inv_armor(win, item->count);
+	}
+	else if (gfc_strlcmp(item->name, "damage") == 0)
+	{
+		hud_menu_update_inv_damage(win, item->count);
+	}
+	else if (gfc_strlcmp(item->name, "speed") == 0)
+	{
+		hud_menu_update_inv_speed(win, item->count);
+	}
+	else if (gfc_strlcmp(item->name, "heat") == 0)
+	{
+		hud_menu_update_inv_heat(win, item->count);
+	}
+
 	return 1;
 }
 
 void inventory_remove_item(Inventory *inventory, const char *name)
 {
 	Item *item;
+	Window *win;
 
 	if ((!inventory) || (!name)) return;
 
 	item = inventory_get_item_by_name(inventory, name);
+	win = window_find_by_name("hud_menu");
 
-	if (item) item->count--;
+	if (item)
+	{
+		item->count--;
+
+		if (gfc_strlcmp(item->name, "health") == 0)
+		{
+			hud_menu_update_inv_health(win, item->count);
+		}
+		else if (gfc_strlcmp(item->name, "armor") == 0)
+		{
+			hud_menu_update_inv_armor(win, item->count);
+		}
+		else if (gfc_strlcmp(item->name, "damage") == 0)
+		{
+			hud_menu_update_inv_damage(win, item->count);
+		}
+		else if (gfc_strlcmp(item->name, "speed") == 0)
+		{
+			hud_menu_update_inv_speed(win, item->count);
+		}
+		else if (gfc_strlcmp(item->name, "heat") == 0)
+		{
+			hud_menu_update_inv_heat(win, item->count);
+		}
+	}
 
 	if (item && item->count == 0)
 	{
@@ -139,8 +213,11 @@ void inventory_load_data(Inventory *inventory, const char *filename)
 {
 	int i, c;
 	SJson *json, *djson, *ijson;
+	Window *win;
 
 	if ((!inventory) || (!filename)) return;
+
+	win = window_find_by_name("hud_menu");
 
 	json = sj_load(filename);
 	if (!json)
@@ -178,5 +255,26 @@ void inventory_load_data(Inventory *inventory, const char *filename)
 		}
 
 		for (j = 0; j < count; j++) inventory_add_item(inventory, name);
+
+		if (gfc_strlcmp(name, "health") == 0)
+		{
+			hud_menu_update_inv_health(win, count);
+		}
+		else if (gfc_strlcmp(name, "armor") == 0)
+		{
+			hud_menu_update_inv_armor(win, count);
+		}
+		else if (gfc_strlcmp(name, "damage") == 0)
+		{
+			hud_menu_update_inv_damage(win, count);
+		}
+		else if (gfc_strlcmp(name, "speed") == 0)
+		{
+			hud_menu_update_inv_speed(win, count);
+		}
+		else if (gfc_strlcmp(name, "heat") == 0)
+		{
+			hud_menu_update_inv_heat(win, count);
+		}
 	}
 }

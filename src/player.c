@@ -6,6 +6,7 @@
 
 #include "gf3d_vgraphics.h"
 
+#include "hud_menu.h"
 #include "inventory.h"
 #include "level.h"
 #include "player.h"
@@ -128,8 +129,8 @@ Entity *player_spawn(GFC_Vector3D position)
 		inventory_init(&data->inventory);
 		inventory_load_data(&data->inventory, "defs/inventory_data.json");
 		data->health = 100;
-		data->armor = 0;
-		data->heat = 0;
+		data->armor = 25;
+		data->heat = 25;
 		data->cameraFollowDistance = 15;
 		data->cameraRotation = gfc_vector2d(0, 0);
 	}
@@ -182,6 +183,7 @@ static int player_update(Entity *self)
 	PlayerData *data;
 	GFC_Matrix4 *view;
 	GFC_Vector3D offset;
+	Window *win;
 
 	if ((!self) || (!self->data)) return 0;
 	data = (PlayerData*) self->data;
@@ -205,6 +207,12 @@ static int player_update(Entity *self)
 		self->position,
 		gfc_vector3d(0, 0, 1)
 	);
+
+	// update hud
+	win = window_find_by_name("hud_menu");
+	hud_menu_update_health(win, data->health);
+	hud_menu_update_armor(win, data->armor);
+	hud_menu_update_heat(win, data->heat);
 
 	return 1;
 }
