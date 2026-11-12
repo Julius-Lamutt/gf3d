@@ -321,7 +321,8 @@ static void player_handle_touches(Entity *self)
 		
 		if (other->layer == EL_MONSTER)
 		{
-			continue;
+			self->velocity.x = 0;
+			self->velocity.y = 0;
 		}
 		else if (other->layer == EL_ITEM)
 		{
