@@ -52,7 +52,7 @@ void exitGame()
 int main(int argc,char *argv[])
 {
     // local variables
-    Window *mainMenu;
+    Window *hud;
     Entity *player, *health, *armor, *damage, *speed, *heat;
     Level *level;
     GFC_Rect rect = gfc_rect(10, 10, 50, 50);
@@ -87,7 +87,7 @@ int main(int argc,char *argv[])
     gf2d_mouse_load("actors/mouse.actor");
 
     // menu
-    mainMenu = main_menu();
+    hud = hud_menu();
 
     // player entity
     player = player_spawn(gfc_vector3d(5, 5, 10));
@@ -125,7 +125,6 @@ int main(int argc,char *argv[])
 
             //2D draws
             window_system_draw();
-            gf2d_font_draw_line_tag("ALT+F4 to exit", FT_H1, GFC_COLOR_WHITE, gfc_vector2d(10,10));
             gf2d_mouse_draw();
 
         gf3d_vgraphics_render_end();

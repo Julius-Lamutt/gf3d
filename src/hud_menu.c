@@ -27,7 +27,7 @@ Window *hud_menu()
 {
 	Window *win;
 	HudMenuData *data;
-	win = window_load("defs/menus/hud.json");
+	win = window_load("defs/menus/hud_menu.json");
 	if (!win)
 	{
 		slog("failed to load inventory menu");
@@ -67,21 +67,21 @@ static int hud_menu_update(Window *win, GFC_List *updates)
 	{
 		element = gfc_list_get_nth(win->elements, i);
 		if (!element) continue;
-		if (gfc_strlcmp(element->name, "label_health") == 0)
+		if (gfc_strlcmp(element->name, "label_health_number") == 0)
 		{
 			GFC_TextWord buffer;
 
 			_itoa((int)data->health, &buffer, 10);
 			element_update_label(element, buffer, NULL);
 		}
-		else if (gfc_strlcmp(element->name, "label_armor") == 0)
+		else if (gfc_strlcmp(element->name, "label_armor_number") == 0)
 		{
 			GFC_TextWord buffer;
 
 			_itoa((int)data->armor, &buffer, 10);
 			element_update_label(element, buffer, NULL);
 		}
-		else if (gfc_strlcmp(element->name, "label_heat") == 0)
+		else if (gfc_strlcmp(element->name, "label_heat_number") == 0)
 		{
 			GFC_TextWord buffer;
 
