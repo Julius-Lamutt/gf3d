@@ -2,7 +2,7 @@
   "monster": 
   [
     {
-      "name": "basic",
+      "name": "brawler",
       "model": "models/cube.model",
       "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
       "color": [20, 20, 215, 255]

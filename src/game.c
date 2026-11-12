@@ -55,7 +55,7 @@ int main(int argc,char *argv[])
 {
     // local variables
     Window *hud;
-    Entity *player, *health, *armor, *damage, *speed, *heat;
+    Entity *player, *health, *armor, *damage, *speed, *heat, *brawler, *brute, *grabber, *shooter, *dodger;
     Level *level;
     GFC_Rect rect = gfc_rect(10, 10, 50, 50);
 
@@ -91,15 +91,18 @@ int main(int argc,char *argv[])
     // menu
     hud = hud_menu();
 
-    // player entity
-    player = player_spawn(gfc_vector3d(5, 5, 10));
+    // player
+    player = player_spawn(gfc_vector3d(0, -90, 10));
 
-    // health item
-    health = item_pickup_spawn("health", gfc_vector3d(-12, 10, 10));
-    armor = item_pickup_spawn("armor", gfc_vector3d(-6, 10, 10));
-    damage = item_pickup_spawn("damage", gfc_vector3d(0, 10, 10));
-    speed = item_pickup_spawn("speed", gfc_vector3d(6, 10, 10));
-    heat = item_pickup_spawn("heat", gfc_vector3d(12, 10, 10));
+    // item pickups
+    health = item_pickup_spawn("health", gfc_vector3d(-12, -80, 10));
+    armor = item_pickup_spawn("armor", gfc_vector3d(-6, -80, 10));
+    damage = item_pickup_spawn("damage", gfc_vector3d(0, -80, 10));
+    speed = item_pickup_spawn("speed", gfc_vector3d(6, -80, 10));
+    heat = item_pickup_spawn("heat", gfc_vector3d(12, -80, 10));
+
+    // monsters
+    brawler = monster_spawn("brawler", gfc_vector3d(-15, -80, 10));
 
     // ai init
     ai_init();

@@ -122,6 +122,15 @@ Entity *monster_spawn(const char *monsterName, GFC_Vector3D position)
 	self->draw = monster_draw;
 	self->free = monster_free;
 
+	ai = gfc_allocate_array(sizeof(MonsterAI), 1);
+	if (!ai)
+	{
+		slog("failed to allocate AI for monster");
+		entity_free(self);
+		return NULL;
+	}
+	ai->moveState = AIMS_IDLE;
+
 	self->data = gfc_allocate_array(sizeof(MonsterData), 1);
 	if (self->data)
 	{
@@ -130,16 +139,14 @@ Entity *monster_spawn(const char *monsterName, GFC_Vector3D position)
 		data->damage = 20;
 		data->walkSpeed = 0.2;
 		data->runSpeed = 0.5;
-
-		data->ai = gfc_allocate_array(sizeof(MonsterAI), 1);
-		if (!data->ai)
-		{
-			slog("failed to allocate AI for monster");
-			entity_free(self);
-			return NULL;
-		}
-		ai = (MonsterAI*) data->ai;
-		ai->moveState = AIMS_IDLE;
+		data->ai = ai;
+	}
+	else
+	{
+		slog("failed to allocate monster data for monster");
+		entity_free(self);
+		free(ai);
+		return NULL;
 	}
 
 	return self;
@@ -150,10 +157,10 @@ static int monster_think(Entity *self)
 	MonsterData *data;
 	MonsterAI *ai;
 
-	if (!self || !self->data) return;
+	if (!self || !self->data) return 0;
 	data = (MonsterData*) self->data;
 
-	if (!data->ai) return;
+	if (!data->ai) return 0;
 	ai = (MonsterAI*) data->ai;
 
 	self->velocity.x = 0;
@@ -177,6 +184,8 @@ static int monster_think(Entity *self)
 	if (!entity_move_check(self)) self->velocity = gfc_vector3d(0, 0, 0);
 
 	monster_handle_touches(self);
+
+	return 1;
 }
 
 static int monster_update(Entity *self)
@@ -184,10 +193,10 @@ static int monster_update(Entity *self)
 	MonsterData *data;
 	MonsterAI *ai;
 
-	if (!self || !self->data) return;
+	if (!self || !self->data) return 0;
 	data = (MonsterData*) self->data;
 
-	if (!data->ai) return;
+	if (!data->ai) return 0;
 	ai = (MonsterAI*) data->ai;
 
 	// kill monster if it is out of health
@@ -206,7 +215,7 @@ static int monster_update(Entity *self)
 	self->bounds.z = self->position.z - 0.5 * self->bounds.d;
 
 	// update monster ai
-	ai_update_monster(self, self->position);
+	ai_update_monster(data->ai, self->position);
 
 	return 1;
 }
