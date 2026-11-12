@@ -224,6 +224,10 @@ static int player_update(Entity *self)
 	);
 
 	// update hud
+	if (data->health < 0) data->health = 0;
+	if (data->armor < 0) data->armor = 0;
+	if (data->heat < 0) data->heat = 0;
+
 	win = window_find_by_name("hud_menu");
 	hud_menu_update_health(win, data->health);
 	hud_menu_update_armor(win, data->armor);
@@ -365,5 +369,10 @@ void player_damage(Entity *self, Uint32 damage)
 	if ((!self) || !(self->data)) return;
 	data = (PlayerData*) self->data;
 
-	data->health -= damage;
+	if (data->armor)
+	{
+		data->armor -= damage;
+		data->health -= (int)(damage/5);
+	}
+	else data->health -= damage;
 }
