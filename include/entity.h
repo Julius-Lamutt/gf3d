@@ -108,4 +108,10 @@ Uint8 entity_move_check(Entity *self);
 */
 void entity_get_touches(Entity *self);
 
+/**
+* @brief get the closest monster entity
+* @param self the entity to find the closest monster entity for
+*/
+Entity *entity_get_closest_monster(Entity *self);
+
 #endif

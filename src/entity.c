@@ -269,3 +269,27 @@ static Uint8 entity_touch_test(Entity *self, Entity *other)
 
 	return gfc_box_overlap(selfBox, otherBox);
 }
+
+Entity *entity_get_closest_monster(Entity *self)
+{
+	Entity *other = NULL, *closest = NULL;
+	float dist, distBest = 5;
+
+	if (!self) return;
+
+	int i;
+	for (i = 0; i < entity_manager.entMax; i++)
+	{
+		if (!entity_manager.entityList[i]._inuse) continue;
+		if (!(entity_manager.entityList[i].layer == EL_MONSTER)) continue;
+
+		other = &entity_manager.entityList[i];
+		dist = gfc_vector3d_magnitude_between(self->position, other->position);
+		if (dist < distBest)
+		{
+			closest = other;
+			distBest = dist;
+		}
+	}
+	return closest;
+}

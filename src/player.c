@@ -9,6 +9,7 @@
 #include "hud_menu.h"
 #include "inventory.h"
 #include "level.h"
+#include "monster.h"
 #include "player.h"
 
 typedef struct
@@ -17,12 +18,19 @@ typedef struct
 	Sint16			armor;
 	Sint16			heat;
 	Inventory		inventory;
+
 	Uint8			damage_boost;
 	Uint32			damage_boost_start;
 	Uint8			speed_boost;
 	Uint32			speed_boost_start;
 	Uint8			freeze;
 	Uint32			freeze_start;
+
+	Uint8			attack_disabled;
+	Uint32			attack_start;
+	Uint8			punch;
+	Uint8			special_punch;
+
 	float			cameraFollowDistance;
 	GFC_Vector2D	cameraRotation;
 } PlayerData;
@@ -34,6 +42,9 @@ static int player_draw(Entity *self);
 static void player_free(Entity *self);
 static void player_handle_inputs(Entity *self);
 static void player_handle_touches(Entity *self);
+static void player_punch(Entity *self);
+static void player_special_punch(Entity *self);
+static void player_attack(Entity *self);
 
 Entity *player_load(const char *filename)
 {
@@ -163,6 +174,17 @@ static int player_think(Entity *self)
 	if ((!self) || (!self->data)) return 0;
 	data = (PlayerData*) self->data;
 
+	// check punching
+	data->punch = 0;
+	data->special_punch = 0;
+	if (data->attack_disabled)
+	{
+		if (SDL_GetTicks() - data->attack_start > 500)
+		{
+			data->attack_disabled = 0;
+		}
+	}
+
 	// check damage boost
 	if (data->damage_boost)
 	{
@@ -202,6 +224,9 @@ static int player_think(Entity *self)
 
 	// handle entity touches for this frame
 	player_handle_touches(self);
+
+	// execute an attack
+	player_attack(self);
 
 	return 1;
 }
@@ -317,6 +342,28 @@ static void player_handle_inputs(Entity *self)
 			data->heat += 75;
 		}
 	}
+
+	// check attack
+	if (gfc_input_command_down("punch"))
+	{
+		if (!data->attack_disabled)
+		{
+			data->attack_start = SDL_GetTicks();
+			data->attack_disabled = 1;
+			data->punch = 1;
+			player_punch(self);
+		}
+	}
+	if (gfc_input_command_down("special_punch") && data->heat >= 50)
+	{
+		if (!data->attack_disabled)
+		{
+			data->attack_start = SDL_GetTicks();
+			data->attack_disabled = 1;
+			data->special_punch = 1;
+			player_special_punch(self);
+		}
+	}
 }
 
 static void player_handle_touches(Entity *self)
@@ -401,4 +448,53 @@ void player_freeze(Entity *self)
 
 	data->freeze = 1;
 	data->freeze_start = SDL_GetTicks();
+}
+
+static void player_punch(Entity *self)
+{
+	PlayerData *data;
+	GFC_Sound *sound;
+
+	if ((!self) || !(self->data)) return;
+	data = (PlayerData*) self->data;
+
+	sound = gfc_sound_load("defs/audio/punch.mp3", 0.4, 1);
+	gfc_sound_play(sound, 0, 15, -1);
+	gfc_sound_free(sound);
+}
+
+static void player_special_punch(Entity *self)
+{
+	PlayerData *data;
+	GFC_Sound *sound;
+
+	if ((!self) || !(self->data)) return;
+	data = (PlayerData*) self->data;
+
+	sound = gfc_sound_load("defs/audio/punch.mp3", 0.8, 1);
+	gfc_sound_play(sound, 0, 30, -1);
+	gfc_sound_free(sound);
+}
+
+static void player_attack(Entity *self)
+{
+	PlayerData *data;
+	Entity *other = NULL;
+
+	if ((!self) || (!self->data)) return;
+	data = (PlayerData*) self->data;
+
+	other = entity_get_closest_monster(self);
+	if (other == NULL) return;
+
+	if (data->punch)
+	{
+		if (data->damage_boost) monster_damage(other, 40);
+		else monster_damage(other, 20);
+	}
+	else if (data->special_punch)
+	{
+		monster_damage(other, 100);
+		data->heat -= 50;
+	}
 }
