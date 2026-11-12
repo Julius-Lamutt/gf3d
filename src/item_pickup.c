@@ -46,28 +46,28 @@ Entity *item_pickup_spawn(const char *itemName, GFC_Vector3D position)
 	}
 	if (i == c)
 	{
-		slog("failed to find item '%s' in item pickup file", itemName);
+		slog("failed to find item pickup '%s' in item pickup file", itemName);
 		sj_free(json);
 		return NULL;
 	}
 	str2 = sj_object_get_string(item, "model");
 	if (!str2)
 	{
-		slog("failed to locate item model for item pickup '%s'", itemName);
+		slog("failed to locate model for item pickup '%s'", itemName);
 		sj_free(json);
 		return NULL;
 	}
 	model = model_load(str2);
 	if (!model)
 	{
-		slog("failed to load player model for item pickup '%s'", itemName);
+		slog("failed to load model for item pickup '%s'", itemName);
 		sj_free(json);
 		return NULL;
 	}
 	bounds = gfc_box_from_config(sj_object_get_value(item, "bounds"));
 	if (bounds.w == 0 && bounds.h == 0 && bounds.d == 0)
 	{
-		slog("failed to load player bounds for item pickup '%s'", itemName);
+		slog("failed to load bounds for item pickup '%s'", itemName);
 		sj_free(json);
 		return NULL;
 	}

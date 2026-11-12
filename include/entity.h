@@ -104,7 +104,7 @@ Uint8 entity_move_check(Entity *self);
 
 /**
 * @brief get the entities touched this frame
-* @param self the entity to find touched for
+* @param self the entity to find touches for
 */
 void entity_get_touches(Entity *self);
 

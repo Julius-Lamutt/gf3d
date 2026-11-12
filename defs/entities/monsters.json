@@ -1,0 +1,35 @@
+{
+  "monster": 
+  [
+    {
+      "name": "basic",
+      "model": "models/cube.model",
+      "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
+      "color": [20, 20, 215, 255]
+    },
+    {
+      "name": "brute",
+      "model": "models/cube.model",
+      "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
+      "color": [215, 20, 20, 255]
+    },
+    {
+      "name": "grabber",
+      "model": "models/cube.model",
+      "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
+      "color": [20, 215, 20, 255]
+    },
+    {
+      "name": "dodger",
+      "model": "models/cube.model",
+      "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
+      "color": [215, 215, 20, 255]
+    },
+    {
+      "name": "shooter",
+      "model": "models/cube.model",
+      "bounds": {"m": [0, 0, 0], "s": [1, 1, 1]},
+      "color": [150, 20, 150, 255]
+    }
+  ]
+}

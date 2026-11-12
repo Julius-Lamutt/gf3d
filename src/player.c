@@ -356,3 +356,13 @@ static void player_handle_touches(Entity *self)
 		}
 	}
 }
+
+void player_damage(Entity *self, Uint32 damage)
+{
+	PlayerData *data;
+
+	if ((!self) || !(self->data)) return;
+	data = (PlayerData*) self->data;
+
+	data->health -= damage;
+}

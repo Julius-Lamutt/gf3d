@@ -33,6 +33,8 @@
 #include "entity.h"
 #include "player.h"
 #include "item_pickup.h"
+#include "monster.h"
+#include "ai.h"
 
 extern int __DEBUG;
 extern int __COLLISION;
@@ -98,6 +100,10 @@ int main(int argc,char *argv[])
     damage = item_pickup_spawn("damage", gfc_vector3d(0, 10, 10));
     speed = item_pickup_spawn("speed", gfc_vector3d(6, 10, 10));
     heat = item_pickup_spawn("heat", gfc_vector3d(12, 10, 10));
+
+    // ai init
+    ai_init();
+    ai_set_player(player);
 
     // level
     level = level_load("levels/test_level.json");
