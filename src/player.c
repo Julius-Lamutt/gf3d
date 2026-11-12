@@ -33,8 +33,6 @@ static void player_free(Entity *self);
 static void player_handle_inputs(Entity *self);
 static void player_handle_touches(Entity *self);
 
-static Uint8 damageBoost;
-
 Entity *player_load(const char *filename)
 {
 	Entity *self;
@@ -163,6 +161,23 @@ static int player_think(Entity *self)
 	if ((!self) || (!self->data)) return 0;
 	data = (PlayerData*) self->data;
 
+	// check damage boost
+	if (data->damage_boost)
+	{
+		if (SDL_GetTicks() - data->damage_boost_start > 7000)
+		{
+			data->damage_boost = 0;
+		}
+	}
+	// check speed boost
+	if (data->speed_boost)
+	{
+		if (SDL_GetTicks() - data->speed_boost_start > 5000)
+		{
+			data->speed_boost = 0;
+		}
+	}
+
 	// handle player inputs
 	player_handle_inputs(self);
 
@@ -238,29 +253,52 @@ static void player_handle_inputs(Entity *self)
 	if (gfc_input_command_down("item_left")) move.x -= 1;
 	if (gfc_input_command_down("item_right")) move.x += 1;
 	gfc_vector3d_normalize(&move);
-	gfc_vector3d_scale(move, move, 1);
+	if (data->speed_boost) gfc_vector3d_scale(move, move, 2);
+	else gfc_vector3d_scale(move, move, 0.6);
 	self->velocity = move;
 
 	// check item use input
 	if (gfc_input_command_down("health"))
 	{
-		inventory_remove_item(&data->inventory, "health");
+		if (inventory_get_item_by_name(&data->inventory, "health"))
+		{
+			inventory_remove_item(&data->inventory, "health");
+			data->health += 50;
+		}
 	}
 	if (gfc_input_command_down("armor"))
 	{
-		inventory_remove_item(&data->inventory, "armor");
+		if (inventory_get_item_by_name(&data->inventory, "armor"))
+		{
+			inventory_remove_item(&data->inventory, "armor");
+			data->armor += 50;
+		}
 	}
 	if (gfc_input_command_down("damage"))
 	{
-		inventory_remove_item(&data->inventory, "damage");
+		if (inventory_get_item_by_name(&data->inventory, "damage"))
+		{
+			inventory_remove_item(&data->inventory, "damage");
+			data->damage_boost = 1;
+			data->damage_boost_start = SDL_GetTicks();
+		}
 	}
 	if (gfc_input_command_down("speed"))
 	{
-		inventory_remove_item(&data->inventory, "speed");
+		if (inventory_get_item_by_name(&data->inventory, "speed"))
+		{
+			inventory_remove_item(&data->inventory, "speed");
+			data->speed_boost = 1;
+			data->speed_boost_start = SDL_GetTicks();
+		}
 	}
 	if (gfc_input_command_down("heat"))
 	{
-		inventory_remove_item(&data->inventory, "heat");
+		if (inventory_get_item_by_name(&data->inventory, "heat"))
+		{
+			inventory_remove_item(&data->inventory, "heat");
+			data->heat += 50;
+		}
 	}
 }
 
