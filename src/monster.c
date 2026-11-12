@@ -132,6 +132,7 @@ Entity *monster_spawn(const char *monsterName, GFC_Vector3D position)
 		return NULL;
 	}
 	ai->moveState = AIMS_IDLE;
+	ai->dir = gfc_vector3d(0, 0, 0);
 	if (gfc_strlcmp(self->name, "shooter") == 0) ai->rangeAttack = 1;
 	else ai->rangeAttack = 0;
 
@@ -266,6 +267,9 @@ static void monster_move(Entity *self)
 		return;
 
 	case AIMS_WALK:
+		/*
+		self->velocity = ai->dir;
+		gfc_vector3d_scale(self->velocity, self->velocity, data->walkSpeed);*/
 		break;
 
 	case AIMS_RUN:

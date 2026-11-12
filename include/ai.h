@@ -23,10 +23,11 @@ typedef enum
 
 typedef struct
 {
-	Uint32		nextAction;		/**<what should the monster ai do next*/
-	Uint32		moveState;		/**<how should the monster ai move*/
-	Uint32		lastAttack;		/**<time since last attack (NO SPAMMING ALLOWED)*/
-	Uint8		rangeAttack;	/**<determines whether ai has access to long range attack*/
+	Uint32			nextAction;		/**<what should the monster ai do next*/
+	Uint32			moveState;		/**<how should the monster ai move*/
+	Uint32			lastAttack;		/**<time since last attack (NO SPAMMING ALLOWED)*/
+	Uint8			rangeAttack;	/**<determines whether ai has access to long range attack*/
+	GFC_Vector3D	dir;			/**<direction of next move*/
 } MonsterAI;
 
 /*

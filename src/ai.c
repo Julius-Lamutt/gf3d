@@ -168,6 +168,7 @@ void ai_update_monster(MonsterAI *ai, GFC_Vector3D position)
 	else if (level_ai.alertStatus == AIAS_IDLE)
 	{
 		ai->nextAction = AINA_NONE;
+		//ai_set_move_state(ai, AIMS_IDLE);
 	}
 }
 
@@ -179,9 +180,19 @@ static Uint8 ai_monster_can_see(MonsterAI *ai, GFC_Vector3D position, float *dis
 
 static void ai_monster_chase(MonsterAI *ai, GFC_Vector3D position)
 {
-	if (!ai) return;
+	//GFC_Vector3D a, b, dir = {0};
 
-	// TODO make ai move in player's direction when in range
+	if (!ai) return;
+	/*
+	a = position;
+	b = ai_get_player_pos();
+
+	gfc_vector3d_sub(dir, a, b);
+	gfc_vector3d_normalize(&dir);
+
+	ai->dir = dir;
+	ai_set_move_state(ai, AIMS_WALK);
+	*/
 }
 
 void ai_set_move_state(MonsterAI *ai, Uint32 move_state)

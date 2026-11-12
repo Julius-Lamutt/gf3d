@@ -102,7 +102,11 @@ int main(int argc,char *argv[])
     heat = item_pickup_spawn("heat", gfc_vector3d(12, -80, 10));
 
     // monsters
-    dodger = monster_spawn("brawler", gfc_vector3d(-0, -50, 10));
+    brawler = monster_spawn("brawler", gfc_vector3d(-60, -50, 10));
+    brute = monster_spawn("brute", gfc_vector3d(-30, -50, 10));
+    grabber = monster_spawn("grabber", gfc_vector3d(0, -50, 10));
+    shooter = monster_spawn("shooter", gfc_vector3d(30, -50, 10));
+    dodger = monster_spawn("dodger", gfc_vector3d(60, -50, 10));
 
     // ai init
     ai_init();
