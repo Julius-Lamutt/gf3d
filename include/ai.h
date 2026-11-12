@@ -25,7 +25,8 @@ typedef struct
 {
 	Uint32		nextAction;		/**<what should the monster ai do next*/
 	Uint32		moveState;		/**<how should the monster ai move*/
-	Uint32		lastAttack;		/**<time since last attack(monsters attack anim should last 1 second)*/
+	Uint32		lastAttack;		/**<time since last attack (NO SPAMMING ALLOWED)*/
+	Uint8		rangeAttack;	/**<determines whether ai has access to long range attack*/
 } MonsterAI;
 
 /*
@@ -56,6 +57,12 @@ Uint32 ai_get_alert_state();
 * @param player the player entity
 */
 void ai_set_player(Entity *player);
+
+/*
+* @brief deal damage to the player
+* @param damage the number of damage to deal
+*/
+void ai_damage_player(Uint16 damage);
 
 /*
 * @brief get the player pos from the ai system

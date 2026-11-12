@@ -130,6 +130,8 @@ Entity *monster_spawn(const char *monsterName, GFC_Vector3D position)
 		return NULL;
 	}
 	ai->moveState = AIMS_IDLE;
+	if (gfc_strlcmp(self->name, "shooter") == 0) ai->rangeAttack = 1;
+	else ai->rangeAttack = 0;
 
 	self->data = gfc_allocate_array(sizeof(MonsterData), 1);
 	if (self->data)
@@ -140,6 +142,7 @@ Entity *monster_spawn(const char *monsterName, GFC_Vector3D position)
 		data->walkSpeed = 0.2;
 		data->runSpeed = 0.5;
 		data->ai = ai;
+		if (gfc_strlcmp(self->name, "brute") == 0) data->damage *= 3;
 	}
 	else
 	{
@@ -171,6 +174,7 @@ static int monster_think(Entity *self)
 		if (gfc_strlcmp(self->name, "grabber") == 0) monster_grab(self);
 		else if (gfc_strlcmp(self->name, "shooter") == 0) monster_shoot(self);
 		else if (gfc_strlcmp(self->name, "dodger") == 0) monster_dodge(self);
+		else monster_punch(self);
 	}
 	else if (ai->nextAction == AINA_MOVE)
 	{
@@ -278,9 +282,10 @@ static void monster_punch(Entity *self)
 	if (!data->ai) return;
 	ai = (MonsterAI*) data->ai;
 
-	sound = gfc_sound_load("defs/audio/gunshot.wav", 30, 3);
+	sound = gfc_sound_load("defs/audio/punch.mp3", 1, 1);
 	gfc_sound_play(sound, 0, 30, -1);
 	gfc_sound_free(sound);
+	ai_damage_player(data->damage);
 }
 
 static void monster_grab(Entity *self)
@@ -295,8 +300,8 @@ static void monster_grab(Entity *self)
 	if (!data->ai) return;
 	ai = (MonsterAI*) data->ai;
 
-	sound = gfc_sound_load("defs/audio/gunshot.wav", 30, 3);
-	gfc_sound_play(sound, 0, 30, -1);
+	sound = gfc_sound_load("defs/audio/grab.mp3", 1, 1);
+	gfc_sound_play(sound, 0, 100, -1);
 	gfc_sound_free(sound);
 }
 
@@ -312,9 +317,10 @@ static void monster_shoot(Entity *self)
 	if (!data->ai) return;
 	ai = (MonsterAI*) data->ai;
 
-	sound = gfc_sound_load("defs/audio/gunshot.wav", 30, 3);
-	gfc_sound_play(sound, 0, 30, -1);
+	sound = gfc_sound_load("defs/audio/gunshot.wav", 1, 3);
+	gfc_sound_play(sound, 0, 20, -1);
 	gfc_sound_free(sound);
+	ai_damage_player(data->damage);
 }
 
 static void monster_dodge(Entity *self)

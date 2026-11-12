@@ -3,10 +3,11 @@
 #include "simple_logger.h"
 
 #include "entity.h"
+#include "player.h"
 #include "ai.h"
 
 static void ai_close();
-static Uint8 ai_monster_can_see(MonsterAI *ai, GFC_Vector3D position);
+static Uint8 ai_monster_can_see(MonsterAI *ai, GFC_Vector3D position, float *distance);
 static void ai_monster_chase(MonsterAI *ai, GFC_Vector3D position);
 
 typedef enum
@@ -106,24 +107,35 @@ void ai_set_player(Entity *player)
 	level_ai.player = player;
 }
 
+void ai_damage_player(Uint16 damage)
+{
+	if (!level_ai.player) return;
+
+	player_damage(level_ai.player, damage);
+}
+
 GFC_Vector3D ai_get_player_pos()
 {
-	return gfc_vector3d(0, 0, 0);
+	if (!level_ai.player) return gfc_vector3d(0, 0, 0);
+
+	return level_ai.player->position;
 }
 
 void ai_update_monster(MonsterAI *ai, GFC_Vector3D position)
 {
+	float distance;
+
 	if (!ai) return;
 
 	// don't do anything during an attack
-	if (SDL_GetTicks() - ai->lastAttack < 750)
+	if (SDL_GetTicks() - ai->lastAttack < 1750)
 	{
 		ai->nextAction = AINA_NONE;
 		return;
 	}
 
 	// me see player, me attack player
-	if (ai_monster_can_see(ai, position))
+	if (ai_monster_can_see(ai, position, &distance))
 	{
 		if (level_ai.alertStatus != AIAS_ALERT) level_ai.alertStatus = AIAS_ALERT;
 
@@ -132,11 +144,14 @@ void ai_update_monster(MonsterAI *ai, GFC_Vector3D position)
 		level_ai.lastPosition = ai_get_player_pos();
 		if (!(level_ai.lastPosition.x == 0 && level_ai.lastPosition.y == 0 && level_ai.lastPosition.z == 0))
 		{
-			ai->nextAction = AINA_ATTACK;
-			ai->lastAttack = SDL_GetTicks();
+			if (ai->rangeAttack || distance <= 5)
+			{
+				ai->nextAction = AINA_ATTACK;
+				ai->lastAttack = SDL_GetTicks();
+			}
 		}
 	}
-	// me no see player, me chase player
+	// me can't reach player, me chase player
 	else if (level_ai.alertStatus == AIAS_ALERT)
 	{
 		ai->nextAction = AINA_MOVE;
@@ -149,13 +164,10 @@ void ai_update_monster(MonsterAI *ai, GFC_Vector3D position)
 	}
 }
 
-static Uint8 ai_monster_can_see(MonsterAI *ai, GFC_Vector3D position)
+static Uint8 ai_monster_can_see(MonsterAI *ai, GFC_Vector3D position, float *distance)
 {
-	GFC_Vector3D vec;
-	Entity *player;
-	
-	//TODO if within a certain range, allow ai to see player
-	return 0;
+	if (distance) *distance = gfc_vector3d_magnitude_between(position, ai_get_player_pos());
+	return gfc_vector3d_distance_between_less_than(position, ai_get_player_pos(), level_ai.sightDistance);
 }
 
 static void ai_monster_chase(MonsterAI *ai, GFC_Vector3D position)

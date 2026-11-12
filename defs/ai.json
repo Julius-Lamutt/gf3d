@@ -1,7 +1,7 @@
 {
   "ai": 
   {
-    "sight_distance": 10,
+    "sight_distance": 15,
     "sight_cone": 0.6
   }
 }

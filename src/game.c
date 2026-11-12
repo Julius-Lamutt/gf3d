@@ -68,7 +68,7 @@ int main(int argc,char *argv[])
     gfc_input_init("config/input.cfg");
     gfc_config_def_init();
     gfc_action_init(1024);
-    gfc_audio_init(200, 1, 0);
+    gfc_sound_init_config("config/audio.cfg");
 
     // gf3d init
     gf3d_mesh_init(2000);
@@ -122,6 +122,7 @@ int main(int argc,char *argv[])
         gf2d_font_update();
 
         // entity updates
+        ai_update();
         entity_system_think();
         entity_system_update();
 
