@@ -102,7 +102,7 @@ int main(int argc,char *argv[])
     heat = item_pickup_spawn("heat", gfc_vector3d(12, -80, 10));
 
     // monsters
-    grabber = monster_spawn("grabber", gfc_vector3d(-0, -50, 10));
+    dodger = monster_spawn("dodger", gfc_vector3d(-0, -50, 10));
 
     // ai init
     ai_init();

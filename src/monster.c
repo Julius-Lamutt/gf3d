@@ -15,6 +15,7 @@ typedef struct
 	Uint16				damage;			/**<monster damage*/
 	Uint8				walkSpeed;		/**<walk speed*/
 	Uint8				runSpeed;		/**<run speed*/
+	Uint8				dodgeLeft;		/**<whether to dodge left or right*/
 } MonsterData;
 
 static int monster_think(Entity *self);
@@ -106,6 +107,7 @@ Entity *monster_spawn(const char *monsterName, GFC_Vector3D position)
 	self->model = model;
 	self->position = position;
 	self->bounds = bounds;
+	self->scale = gfc_vector3d(2, 2, 2);
 
 	self->bounds.w = self->bounds.w * self->scale.x;
 	self->bounds.h = self->bounds.h * self->scale.y;
@@ -141,6 +143,7 @@ Entity *monster_spawn(const char *monsterName, GFC_Vector3D position)
 		data->damage = 20;
 		data->walkSpeed = 0.2;
 		data->runSpeed = 0.5;
+		data->dodgeLeft = 0;
 		data->ai = ai;
 		if (gfc_strlcmp(self->name, "brute") == 0) data->damage *= 3;
 	}
@@ -320,7 +323,7 @@ static void monster_shoot(Entity *self)
 	if (!data->ai) return;
 	ai = (MonsterAI*) data->ai;
 
-	sound = gfc_sound_load("defs/audio/gunshot.wav", 1, 3);
+	sound = gfc_sound_load("defs/audio/gunshot.wav", 1, 1);
 	gfc_sound_play(sound, 0, 20, -1);
 	gfc_sound_free(sound);
 	ai_damage_player(data->damage);
@@ -330,7 +333,6 @@ static void monster_dodge(Entity *self)
 {
 	MonsterData *data;
 	MonsterAI *ai;
-	GFC_Sound *sound;
 
 	if (!self || !self->data) return;
 	data = (MonsterData*) self->data;
@@ -338,9 +340,16 @@ static void monster_dodge(Entity *self)
 	if (!data->ai) return;
 	ai = (MonsterAI*) data->ai;
 
-	sound = gfc_sound_load("defs/audio/gunshot.wav", 30, 3);
-	gfc_sound_play(sound, 0, 30, -1);
-	gfc_sound_free(sound);
+	if (data->dodgeLeft)
+	{
+		self->velocity.x = -5;
+		data->dodgeLeft = 0;
+	}
+	else
+	{
+		self->velocity.x = 5;
+		data->dodgeLeft = 1;
+	}
 }
 
 static void monster_die(Entity *self)
